@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "sombra-chart.fullname" . }}-transcend-service"
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "sombra-chart.labels" . | nindent 4 }}
+  {{- with .Values.transcend_service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.transcend_service.type }}
+  ports:
+    - port: {{ .Values.transcend_service.port }}
+      targetPort: external
+      protocol: TCP
+      name: external
+  selector:
+    {{- include "sombra-chart.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "sombra-chart.fullname" . }}-customer-service"
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "sombra-chart.labels" . | nindent 4 }}
+  {{- with .Values.customer_service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.customer_service.type }}
+  ports:
+    - port: {{ .Values.customer_service.port }}
+      targetPort: internal
+      protocol: TCP
+      name: internal
+  selector:
+    {{- include "sombra-chart.selectorLabels" . | nindent 4 }}

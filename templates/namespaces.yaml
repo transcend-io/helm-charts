@@ -1,0 +1,8 @@
+{{- if .Values.createNewNameSpace -}}
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ .Values.namespace }}
+  labels:
+    {{- include "sombra-chart.labels" . | nindent 4 }}
+{{- end }}

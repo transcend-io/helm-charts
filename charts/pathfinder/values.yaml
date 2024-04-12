@@ -1,0 +1,95 @@
+# Default values for pathfinder chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#  Namespace in which resources will be deployed
+namespace: transcend
+#  Number of instances of Datadog Operator
+replicaCount: 1
+# Set it to `true` to deploy Pathfinder  resources
+enabled: false
+
+image:
+  # Repository to use for Sombra image
+  repository: docker.transcend.io/pathfinder
+  # Define the pullPolicy for Sombra image
+  pullPolicy: IfNotPresent
+  # Sombra version to deploy
+  tag: "v0.12.56"
+
+# Override name of app
+nameOverride: ""
+# Override the full qualified app name
+fullnameOverride: ""
+
+# Define annotations for sombra pod
+podAnnotations: {}
+# Define lables for sombra pod
+podLabels: {}
+
+# Define Pathfinder networking
+service:
+  type: ClusterIP
+  port: 3030
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  host: pathfinder.my-domain.com
+
+# Define resources as per required throughput
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 3030
+    scheme: HTTP
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 3030
+    scheme: HTTP
+
+# These environment variables are required and saved as secrets
+envs_as_secret:
+  - name: AUTHENTICATION_KEY_HASH 
+    value: null
+  - name: OPEN_AI_API_KEY
+    value: null
+  - name: TRANSCEND_API_KEY
+    value: null
+
+envs:
+  - name: PORT
+    value: '3030'
+  - name: REQUIRE_AUTHENTICATION
+    value: 'true'
+
+# Enable to use horizontal pod autoscaling based of metrics
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Define Policies for the Transcend Pathfinder AI governance proxy
+proxyPolicy:
+  enabled: false
+  policy: {}
+  # define your poicy here in uaml format
+

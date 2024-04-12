@@ -1,16 +1,18 @@
+{{- if .Values.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "llm-classifier.fullname" . }}
+  name: {{ include "pathfinder.fullname" . }}
+  namespace: {{ .Values.namespace }}
   labels:
-    {{- include "llm-classifier.labels" . | nindent 4 }}
+    {{- include "pathfinder.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "llm-classifier.selectorLabels" . | nindent 6 }}
+      {{- include "pathfinder.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,24 +20,41 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "llm-classifier.labels" . | nindent 8 }}
+        {{- include "pathfinder.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "llm-classifier.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: RUN_DATADOG_APM
+              value: 'false'
+            - name: DEPLOY_ENV
+              value: prod
+            - name: PATHFINDER_NAME
+              value: 'pathfinder-service'
+            {{- range $name, $value := .Values.envs_as_secret }}
+            - name: {{ $value.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: pathfinder-secrets
+                  key: {{ $value.name }}
+            {{- end }}  
+            {{- if .Values.proxyPolicy.enabled }}
+            - name: PATHFINDER_POLICY_PATH
+              value: '/etc/pathfinder/pathfinder.yml'
+            {{- end }}
+            {{- range $name, $value := .Values.envs }}
+            - name: {{ $value.name }}
+              value: {{ $value.value | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -46,13 +65,17 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
+          {{- if .Values.proxyPolicy.enabled }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
+            - name: policy-config-volume
+              mountPath: /etc/pathfinder/pathfinder.yaml
+              subPath: pathfinder.yaml
           {{- end }}
-      {{- with .Values.volumes }}
+      {{- if .Values.proxyPolicy.enabled }}
       volumes:
-        {{- toYaml . | nindent 8 }}
+        - name: policy-config-volume
+          configMap:
+            name: {{ .Release.Name }}-policy-config
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -66,3 +89,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}

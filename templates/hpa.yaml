@@ -2,14 +2,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "llm-classifier.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  name: {{ include "sombra-chart.fullname" . }}
   labels:
-    {{- include "llm-classifier.labels" . | nindent 4 }}
+    {{- include "sombra-chart.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "llm-classifier.fullname" . }}
+    name: {{ include "sombra-chart.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

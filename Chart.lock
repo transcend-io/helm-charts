@@ -1,0 +1,9 @@
+dependencies:
+- name: llm-classifier
+  repository: ""
+  version: 0.1.0
+- name: pathfinder
+  repository: ""
+  version: 0.1.0
+digest: sha256:26fd39c0e565bd556f6283737752308354cca927f0a98316568bee4d04301d29
+generated: "2024-04-24T16:36:51.762617-05:00"

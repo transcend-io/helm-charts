@@ -1,0 +1,168 @@
+# Default values for sombra-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#  Namespace in which resources will be deployed
+# Create new namespace
+createNewNameSpace: true
+# Name of new namespace, to use existing one set `createNewNameSpace` to `false`.
+namespace: transcend
+
+
+#  Number of instances of Datadog Operator
+replicaCount: 1
+
+# Registry server and credential details
+# The username will always be "Transcend" (this is case-sensitive),
+# and the password will be any API Key for your organization within
+# the Admin Dashboard (note: a scope is not required for the API key).
+# This will be stored as a docker config secret, named `transcend-registry`
+imageCredentials:
+  registry: docker.transcend.io
+  username: Transcend
+  password: null
+
+image:
+  # Repository to use for Sombra image
+  repository: docker.transcend.io/sombra
+  # Define the pullPolicy for Sombra image
+  pullPolicy: IfNotPresent
+  # Sombra version to deploy
+  tag: "v7.178.0"
+
+# Override name of app
+nameOverride: ""
+# Override the full qualified app name
+fullnameOverride: ""
+
+# Define annotations for sombra pod
+podAnnotations: {}
+# Define lables for sombra pod
+podLabels: {}
+
+########### Sombra Architecture ###############
+# @see https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra
+#
+# The Sombra container is running two servers sombra-customer-ingress
+# and sombra-transcend-ingress. Typically, each server is mapped to its
+# own URL and load balancer. It is also possible to deploy a single URL used for
+# both servers you can also map both servers to the same load balancer
+# with a single URL, but different ports.
+
+# It is common to terminate TLS at the load balancer, and
+# have the communication between the load balancer and Sombra servers happen
+# over HTTP. Sombra support TLS connection between the load balancer and server, however, you
+# will need to provide the certificate through environment variables, and you
+# should consider a process for cycling this certificate. To read more
+# about configuring TLS communication between the load balancer and servers,
+# see the TLS Certificate section below.
+#
+# sombra-customer-ingress: 
+#
+# This server handles all communication that come inbound from your
+# internal servers. Here, your customer data is encrypted before it enters
+# the Transcend cloud.
+#
+# Container HTTP Port (terminating TLS at load balancer): 5039
+# Container HTTPS Port (requires TLS Certificate): 5040
+#
+# sombra-transcend-ingress:
+#
+# This server handles all communication that comes inbound from the Transcend cloud.
+# Here, Transcend will make requests to your internal systems, the gateway will authenticate those
+# requests, route the request to the correct system, and then encrypt any sensitive or personal
+# data that is returned by that system.
+#
+# Container HTTP Port (terminating TLS at load balancer): 5042
+# Container HTTPS Port (requires TLS Certificate): 5041
+
+# Define service and ingress for sombra-transcend-ingress server
+transcend_service:
+  type: ClusterIP
+  port: 5042
+  # Annotations to add to the service account
+  annotations: {}
+
+transcend_ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  host: sombra-transcend.my-domain.com
+
+# Define service and ingress for sombra-customer-ingress server
+customer_service:
+  type: ClusterIP
+  port: 5039
+  # Annotations to add to the service account
+  annotations: {}
+
+customer_ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  host: sombra-customer.my-domain.com
+
+# Configure the container service with the minimum set of environment variables
+# @see https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra#3.-configure-the-container-service-with-the-minimum-set-of-environment-variables
+
+# These environment variables are saved as secret
+envs_as_secret:
+  - name: JWT_ECDSA_KEY
+    value: '<JWT_ECDSA_KEY>'
+
+envs:
+  - name: ORGANIZATION_URI
+    value: 'some-org'
+  - name: SOMBRA_ID
+    value: 'some-id'
+  - name: EMPLOYEE_AUTHENTICATION_METHODS
+    value: 'transcend,session'
+  - name: DATA_SUBJECT_AUTHENTICATION_METHODS
+    value: 'transcend,session'
+  - name: LLM_CLASSIFIER_URL
+    value: http://llm-classifier.transcend.svc:6081
+
+# Customise the resousrces as per througput need
+resources:
+   requests:
+    memory: '1000Mi'
+    cpu: '2000m'
+   limits:
+    memory: '2000Mi'
+    cpu: '3000m'
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 5042
+    scheme: HTTP
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 5042
+    scheme: HTTP
+
+# Enable to use horizontal pod autoscaling based of metrics
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+global:
+  imagePullSecrets:
+  - name: transcend-registry
+
+# Data classification service using LLM model
+llm-classfier:
+  enabled: false
+
+# Pathfinder is AI governance layer that gives you control and auditability on data going in and out of LLMs.
+# @see https://docs.transcend.io/docs/pathfinder
+pathfinder:
+  enabled: false

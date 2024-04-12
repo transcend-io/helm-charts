@@ -1,0 +1,28 @@
+{{- if and .Values.enabled .Values.ingress.enabled -}}
+{{- $fullIngressName := "pathfinder-ingress" -}}
+{{- $ingressPort := .Values.service.port -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullIngressName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "pathfinder.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullIngressName }}
+                port:
+                  number: {{ $ingressPort }}
+{{- end }}

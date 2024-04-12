@@ -1,0 +1,76 @@
+{{- $envs_as_secret_len := len .Values.envs_as_secret }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sombra-chart.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "sombra-chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "sombra-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sombra-chart.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- if gt $envs_as_secret_len 0  -}}
+            {{- range $name, $value := .Values.envs_as_secret }}
+            - name: {{ $value.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: sombra-secrets
+                  key: {{ $value.name }}
+            {{- end }}  
+            {{- end }}
+            {{- range $name, $value := .Values.envs }}
+            - name: {{ $value.name }}
+              value: {{ $value.value | quote }}
+            {{- end }}
+            - name: IS_MULTI
+              value: 'false'
+          ports:
+            - name: external
+              containerPort: {{ .Values.transcend_service.port }}
+              protocol: TCP
+            - name: internal
+              containerPort: {{ .Values.customer_service.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,15 @@
+apiVersion: v2
+name: sombra
+description: A Helm chart for deploying sombra and its dependent services in Kubernetes
+type: application
+version: 0.1.0
+maintainers:
+- name: Transcend
+  email: dev@transcend.io
+dependencies:
+- name: llm-classifier
+  condition: llm-classifier.enabled
+  version: "0.1.0"
+- name: pathfinder
+  condition: pathfinder.enabled
+  version: "0.1.0"
