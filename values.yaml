@@ -28,7 +28,7 @@ image:
   # Define the pullPolicy for Sombra image
   pullPolicy: IfNotPresent
   # Sombra version to deploy
-  tag: "v7.178.0"
+  tag: "latest"
 
 # Override name of app
 nameOverride: ""
@@ -120,7 +120,7 @@ envs:
   - name: DATA_SUBJECT_AUTHENTICATION_METHODS
     value: 'transcend,session'
   - name: LLM_CLASSIFIER_URL
-    value: http://llm-classifier.transcend.svc:6081
+    value: http://<RELEASE_NAME>llm-classifier.transcend.svc:6081
 
 # Customise the resousrces as per througput need
 resources:

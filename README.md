@@ -3,17 +3,17 @@
 Official Helm charts to deploy Sombra and dependent products in Kubernetes cluster.
 
 ## How to use Helm repository
-1.  Makes sure you a working kubernetes cluster and if you planning to deploy LLM Classifier service along with sombra LLM Classifer application requires Nvidia GPU to run, so please make sure cluster support `nvidia.com/gpu`
-resource.
+1.  Make sure you have a working Kubernetes cluster. If you're planning to deploy LLM Classifier service along with Sombra, LLM Classifer application will require Nvidia GPU to run, so please make sure cluster supports `nvidia.com/gpu`
+as resource.
 
-2.	Add the heml repo
+2.	Add the helm repo
 
     ```bash
-    helm repo add sombra-charts  https://github.com/transcend-io/sombra-helm-chart
+    helm repo add sombra_chart https://transcend-io.github.io/sombra-helm-chart/
     ```
 3.	To customize the chart and to provide all required variables create an YAML `values.yaml` file with.
 
-**Note:** For this example `values.yaml` a working kubernetes cluster with `alb` AWS application loadbalancer ingress controller must be deployed. 
+**Note:** For this example `values.yaml` a working Kubernetes cluster with `alb` AWS application load balancer ingress controller must be deployed. 
 
 ```yaml
 imageCredentials:
@@ -31,13 +31,13 @@ transcend_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-port: "5042"
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <vpc_public_subnets>
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-transcend.my-domain.com
@@ -52,13 +52,13 @@ customer_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-port: "5039"
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
     alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: <vpc_private_subnet>
+    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-customer.my-domain.com
@@ -80,22 +80,22 @@ envs_as_secret:
     value: '<INTERNAL_KEY>'
 
 ```
-4.	Install the sombra package.
+4.	Install the Sombra package.
     ```
-    helm install some_release . -f values.yaml
+    helm install some-release sombra-chart/sombra -f ~/values.yaml
     ```	
-5.	To upgrade the sombra package after customization.
+5.	To upgrade the Sombra package after customization.
 	 ```bash
-	 helm upgrade some_release . -f values.yaml
+	 helm upgrade some-release sombra-chart/sombra -f ~/values.yaml
 	 ```
 5.	To uninstalling a Release
 	 ```bash
-	 helm upgrade some_release .
+	 helm uninstall some-release
 	 ```
 
 ## Configuring Sombra
 
-Following is the list of enviroment variables supported by Sombra for its configuration. Please check out our detailed [guide](https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra) on self-hosting sombra configuration.
+Following is the list of enviroment variables supported by Sombra for its configuration. Please check out our detailed [guide](https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra) on self-hosting Sombra configuration.
 
 | Variables                              | Required                                                                       | default                                                                                                                    | secret | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 | -------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -130,10 +130,10 @@ Following is the list of enviroment variables supported by Sombra for its config
 | OAUTH_EMAIL_IS_VERIFIED                | no                                                                             | N/A                                                                                                                        | no     | Whether all OAuth emails are already verified by default, attested by the organization.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | DATA_SUBJECT_SESSION_EXPIRY_TIME       | no                                                                             | '5 days'                                                                                                                   | no     | The length in time that the session JWT will last                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | EMPLOYEE_SESSION_EXPIRY_TIME           | no                                                                             | '3 hour'                                                                                                                   | no     | The length in time that the session JWT will last                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| SOMBRA_TLS_KEY                         | yes, if you want encrypted traffic b/w sombra and the load balancer.           | N/A                                                                                                                        | no     | The TLS private key for this server, base64-encoded in PEM format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| SOMBRA_TLS_KEY_PASSPHRASE              | yes, if you want encrypted traffic b/w sombra and the load balancer.           | N/A                                                                                                                        | yes    | when generating your TLS cert, you may have been prompted to add a passphrase to your private key. If you did, you can add the passphrase here to let Sombra access it.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| SOMBRA_TLS_CERT                        | yes, if you want encrypted traffic b/w sombra and the load balancer.           | N/A                                                                                                                        | yes    | The TLS certificate for this server, base64-encoded in PEM format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| TRUSTED_CLIENT_CA_CERT_ENCODED         | no                                                                             | N/A                                                                                                                        | yes    | The public CA cert from a client who is connecting to the internal sombra over mutual TLS. If set, sombra will enforce that all incoming requests to non-health routes have a client cert.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| SOMBRA_TLS_KEY                         | yes, if you want encrypted traffic b/w Sombra and the load balancer.           | N/A                                                                                                                        | no     | The TLS private key for this server, base64-encoded in PEM format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| SOMBRA_TLS_KEY_PASSPHRASE              | yes, if you want encrypted traffic b/w Sombra and the load balancer.           | N/A                                                                                                                        | yes    | when generating your TLS cert, you may have been prompted to add a passphrase to your private key. If you did, you can add the passphrase here to let Sombra access it.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| SOMBRA_TLS_CERT                        | yes, if you want encrypted traffic b/w Sombra and the load balancer.           | N/A                                                                                                                        | yes    | The TLS certificate for this server, base64-encoded in PEM format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| TRUSTED_CLIENT_CA_CERT_ENCODED         | no                                                                             | N/A                                                                                                                        | yes    | The public CA cert from a client who is connecting to the internal Sombra over mutual TLS. If set, Sombra will enforce that all incoming requests to non-health routes have a client cert.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | EXTERNAL_PORT_HTTPS                    | no                                                                             | 5041                                                                                                                       | no     | Port for the external HTTPS server (faces inside firewall).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | EXTERNAL_PORT_HTTP                     | no                                                                             | 5042                                                                                                                       | no     | Port for the external HTTP server (faces inside firewall)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | INTERNAL_PORT_HTTPS                    | no                                                                             | 5040                                                                                                                       | no     | Port for the internal HTTPS server (faces inside firewall)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
@@ -167,23 +167,24 @@ Following is the list of enviroment variables supported by Sombra for its config
 | DD_APM_RUNTIME_METRICS                 | no                                                                             | true                                                                                                                       | no     | Whether to enable capturing runtime metrics. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | DD_TRACE_DEBUG                         | no                                                                             | false                                                                                                                      | no     | Enable debug logging in the tracer. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | DD_SERVICE_NAME                        | no                                                                             | `transcend-hosted-sombra`                                                                                                  | no     | The name for your Sombra. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| LOG_HTTP_TRANSPORT_URL                 | yes if your want to forward sombra logs to transcend                           | N/A                                                                                                                        | no     | The Transcend Collector's HTTPS ingress endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| LOG_HTTP_TRANSPORT_URL                 | yes if your want to forward Sombra logs to transcend                           | N/A                                                                                                                        | no     | The Transcend Collector's HTTPS ingress endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | LOG_HTTP_TRANSPORT_BATCH_INTERVAL_MS   | no                                                                             | 5000                                                                                                                       | no     | The maximum time to wait between batches of logs sent to the Collector.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | LOG_HTTP_TRANSPORT_BATCH_COUNT         | no                                                                             | 10                                                                                                                         | no     | The maximum number of log lines to send in a single batched request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
-## Configuring LLM Classifier 
-| Variables  | Required | default | secret | Description 
+## Configuring LLM Classifier
+
+| Variables  | Required | default | secret | Description | 
 | ---------- | ---------- | ---------- | ---------- | ---------- | 
 | LLM_SERVER_PORT |  no | 6081| no | Port on which server listen to.|
 | LLM_SERVER_CONCURRENCY |  no | (cpu count) * 2  | no | The number of worker processes for handling requests.|
 | LLM_SERVER_TIMEOUT |  no | 120  | no | Workers silent for more than this many seconds are killed and restarted.|
 | DD_SERVICE |  no | N/A  | no | Service name. Only relevant for log and metrics collection through Datadog agent.|
 | DD_ENV |  no | N/A  | no | Deployment environment. Only relevant for log and metrics collection through Datadog agent.|
-| DD_AGENT_HOST |  no | N/A  | no | Host ip to which logs and metrics are forwarded. Only relevant for log and metrics collection through Datadog agent.|
-
+| DD_AGENT_HOST |  no | N/A  | no | Host IP to which logs and metrics are forwarded. Only relevant for log and metrics collection through Datadog agent.|
 
 ## Configuring Pathfinder
-| Variables  | Required | default | secret | Description 
+
+| Variables  | Required | default | secret | Description | 
 | ---------- | ---------- | ---------- | ---------- | ---------- | 
 | AUTHENTICATION_KEY_HASH| Required if REQUIRE_AUTHENTICATION is true| N/A | yes | Hash to check Bearer tokens against when services are authenticating to the server. See section on Generating Keys below.|
 | REQUIRE_AUTHENTICATION| no| N/A | yes | Whether to require services to authenticate to Pathfinder. May not be necessary if all services using Pathfinder are on the same network.|
@@ -221,13 +222,13 @@ If you set `REQUIRE_AUTHENTICATION` to `true` in your env file, you will also ne
 ## Deployment examples
 
 **Prerequisite:** A working kubernetes cluster with `alb` ingress controller deployed. LLM Classifer application requires
-Nvidia GPU to run, so please make sure cluster support `nvidia.com/gpu` resource if you planning to deploy LLM Classifier service along with sombra. 
+Nvidia GPU to run, so please make sure cluster supports `nvidia.com/gpu` resource if you planning to deploy LLM Classifier service along with sombra. 
 
 ### Deploying Sombra with dropping tls at loadbalancer
 
-Follwoing is an example `values.yaml` file for deploying sombra in a EKS cluster.
-Here we exposing sombra `sombra-transcend-ingress` server, for communication with Trancend, with internet facing load balancer
-and sombra internal `sombra-customer-ingress` server, for communication with internal services, with internal load balancer.  
+Follwoing is an example `values.yaml` file for deploying Sombra in a EKS cluster.
+Here we exposing Sombra `sombra-transcend-ingress` server, for communication with Transcend, with internet facing load balancer
+and Sombra internal `sombra-customer-ingress` server, for communication with internal services, with internal load balancer.  
 
 ```yaml
 imageCredentials:
@@ -245,13 +246,13 @@ transcend_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-port: "5042"
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <vpc_public_subnets>
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-transcend.my-domain.com
@@ -266,13 +267,13 @@ customer_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-port: "5039"
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
     alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: <vpc_private_subnet>
+    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-customer.my-domain.com
@@ -297,7 +298,7 @@ envs_as_secret:
 
 ### Deploying Sombra with encrypted communication with loadbalancer 
 
-Its common to drop tls at load balancer but if you want tls termination at sombra server please follow this example.
+Its common to drop tls at load balancer but if you want tls termination at Sombra server please follow this example.
 
 ```yaml
 imageCredentials:
@@ -307,7 +308,7 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-  port: 5043
+  port: 5041
   # Annotations to add to the service account
   annotations: {}
 
@@ -315,13 +316,14 @@ transcend_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: "5042"
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: "5041"
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5041}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <vpc_public_subnets>
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-transcend.my-domain.com
@@ -336,13 +338,14 @@ customer_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: "5039"
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: "5040"
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5040}]'
     alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: <vpc_private_subnet>
+    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-customer.my-domain.com
@@ -373,9 +376,9 @@ envs_as_secret:
   
 ### Deploying Sombra with Pathfinder
 
-Follwoing is an example `values.yaml` file for deploying sombra in a EKS cluster.
-Here we exposing sombra `sombra-transcend-ingress` server, for communication with Trancend, with internet facing load balancer
-and sombra internal `sombra-customer-ingress` server and pathfinder, for communication with internal services, with internal load balancers for each.
+Follwoing is an example `values.yaml` file for deploying Sombra in a EKS cluster.
+Here we exposing Sombra `sombra-transcend-ingress` server, for communication with Transcend, with internet facing load balancer
+and Sombra internal `sombra-customer-ingress` server and Pathfinder, for communication with internal services, with internal load balancers for each.
 
 ```yaml
 imageCredentials:
@@ -393,13 +396,13 @@ transcend_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-port: "5042"
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <vpc_public_subnets>
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-transcend.my-domain.com
@@ -414,12 +417,12 @@ customer_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}, {"HTTPS": 3030}]'
     alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: <vpc_private_subnets>
+    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-customer.my-domain.com
@@ -453,12 +456,12 @@ pathfinder:
   ingress:
     enabled: true
     annotations:
-      alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+      alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
       alb.ingress.kubernetes.io/healthcheck-path: /health
       alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 3030}]'
       alb.ingress.kubernetes.io/scheme: internal
-      alb.ingress.kubernetes.io/subnets: <vpc_private_subnets>
+      alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
       alb.ingress.kubernetes.io/tags: env=prod
       alb.ingress.kubernetes.io/target-type: ip
     host: pathfinder.my-domain.com
@@ -466,9 +469,9 @@ pathfinder:
 
 ### Deploying Sombra with llm-classifier
 
-Follwoing is an example `values.yaml` file for deploying sombra in a EKS cluster.
-Here we exposing sombra `sombra-transcend-ingress` server, for communication with Trancend, with internet facing load balancer
-and sombra internal `sombra-customer-ingress` server, for communication with internal services, with internal load balancer.  
+Follwoing is an example `values.yaml` file for deploying Sombra in a EKS cluster.
+Here we exposing Sombra `sombra-transcend-ingress` server, for communication with Transcend, with internet facing load balancer
+and Sombra internal `sombra-customer-ingress` server, for communication with internal services, with internal load balancer.  
 
 ```yaml
 imageCredentials:
@@ -486,13 +489,13 @@ transcend_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-port: "5042"
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <vpc_public_subnets>
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-transcend.my-domain.com
@@ -507,12 +510,12 @@ customer_ingress:
   enabled: true
   className: alb
   annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <cert_arn>
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
     alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: <vpc_private_subnets>
+    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   host: sombra-customer.my-domain.com
@@ -525,7 +528,7 @@ envs:
   - name: DATA_SUBJECT_AUTHENTICATION_METHODS
     value: 'transcend,session'
   - name: LLM_CLASSIFIER_URL
-    value: http://llm-classifier.transcend.svc:6081
+    value: http://<release-name>-llm-classifier.transcend.svc:6081
 
 envs_as_secret:
   - name: INTERNAL_KEY_HASH 

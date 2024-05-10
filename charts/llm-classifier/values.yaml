@@ -16,7 +16,7 @@ image:
   # Define the pullPolicy for llm-classifier image
   pullPolicy: IfNotPresent
   # llm-classifer version to deploy
-  tag: "v1.0.0"
+  tag: "latest"
 
 # Override name of app
 nameOverride: ""

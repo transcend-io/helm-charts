@@ -15,7 +15,7 @@ image:
   # Define the pullPolicy for Sombra image
   pullPolicy: IfNotPresent
   # Sombra version to deploy
-  tag: "v0.12.56"
+  tag: "latest"
 
 # Override name of app
 nameOverride: ""
