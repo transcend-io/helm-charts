@@ -36,7 +36,15 @@ ingress:
   enabled: false
   className: "nginx"
   annotations: {}
-  host: pathfinder.my-domain.com
+  hosts:
+    - host: pathfinder.my-domain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 # Define resources as per required throughput
 resources: {}

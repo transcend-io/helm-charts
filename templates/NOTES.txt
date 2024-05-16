@@ -1,6 +1,10 @@
 1. Get the Sombra transcend ingress URL by running these commands:
 {{- if .Values.transcend_ingress.enabled }}
-  http{{ if $.Values.transcend_ingress.tls }}s{{ end }}://{{ .Values.transcend_ingress.host }}
+  {{- range $host := .Values.transcend_ingress.hosts }}
+    {{- range .paths }}
+    http{{ if $.Values.transcend_ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+    {{- end }}
+  {{- end }}
 {{- else if contains "NodePort" .Values.transcend_service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Values.namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "sombra-chart.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Values.namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
@@ -18,7 +22,11 @@
 
 2. Get the Sombra customer ingress URL by running these commands:
 {{- if .Values.customer_ingress.enabled }}
-  http{{ if $.Values.customer_ingress.tls }}s{{ end }}://{{ .Values.customer_ingress.host }}
+  {{- range $host := .Values.customer_ingress.hosts }}
+    {{- range .paths }}
+    http{{ if $.Values.customer_ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+    {{- end }}
+  {{- end }}
 {{- else if contains "NodePort" .Values.customer_service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Values.namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "sombra-chart.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Values.namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
