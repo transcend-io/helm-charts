@@ -101,7 +101,7 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
 
 ## Deployment examples
 
-The following are sample `values.yaml` files for deploying Sombra in an AWS EKS cluster with different configurations.
+The following are sample `values.yaml` files for deploying Sombra in an AWS EKS cluster with different configurations. AWS is not a requirement—Kubernetes can run on any cloud—but AWS is used in these examples for illustrative purposes.
 
 - Each example assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
 - In each example, we are exposing Sombra's `sombra-transcend-ingress` server (for communication with Transcend through an internet-facing load balancer) and Sombra's  `sombra-customer-ingress` server (for communication with internal services through an internal load balancer).
