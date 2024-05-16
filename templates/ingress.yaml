@@ -1,5 +1,5 @@
+{{- $fullName := include "sombra-chart.fullname" . -}}
 {{- if .Values.transcend_ingress.enabled -}}
-{{- $fullTrancendIngressName := "sombra-transcend-ingress" -}}
 {{- $trancenIngressPort := .Values.transcend_service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -14,17 +14,32 @@ metadata:
   {{- end }}
 spec:
   ingressClassName: {{ .Values.transcend_ingress.className }}
+  {{- if .Values.transcend_ingress.tls }}
+  tls:
+    {{- range .Values.transcend_ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: {{ .Values.transcend_ingress.host | quote }}
+    {{- range .Values.transcend_ingress.hosts }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
             backend:
+              backend:
               service:
-                name: "{{ include "sombra-chart.fullname" . }}-transcend-service"
+                name: "{{ $fullName }}-transcend-service"
                 port:
                   number: {{ $trancenIngressPort }}
+          {{- end }}
+    {{- end }}
 {{- end }}
 ---
 {{- if .Values.customer_ingress.enabled -}}
@@ -43,15 +58,30 @@ metadata:
   {{- end }}
 spec:
   ingressClassName: {{ .Values.customer_ingress.className }}
+  {{- if .Values.customer_ingress.tls }}
+  tls:
+    {{- range .Values.customer_ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: {{ .Values.customer_ingress.host | quote }}
+    {{- range .Values.customer_ingress.hosts }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
             backend:
+              backend:
               service:
-                name: "{{ include "sombra-chart.fullname" . }}-customer-service"
+                name: "{{ $fullName }}-customer-service"
                 port:
                   number: {{ $customerIngressPort }}
+          {{- end }}
+    {{- end }}
 {{- end }}

@@ -22,9 +22,6 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
 
     transcend_service:
       type: NodePort
-      port: 5042
-      # Annotations to add to the service account
-      annotations: {}
 
     transcend_ingress:
       enabled: true
@@ -39,13 +36,14 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
         alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
         alb.ingress.kubernetes.io/tags: env=dev
         alb.ingress.kubernetes.io/target-type: ip
-      host: sombra-transcend.my-domain.com
+      hosts:
+        - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+          paths:
+            - path: /
+              pathType: Prefix
 
     customer_service:
       type: NodePort
-      port: 5039
-      # Annotations to add to the service account
-      annotations: {}
 
     customer_ingress:
       enabled: true
@@ -60,7 +58,11 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
         alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
         alb.ingress.kubernetes.io/tags: env=dev
         alb.ingress.kubernetes.io/target-type: ip
-      host: sombra-customer.my-domain.com
+      hosts:
+        - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+          paths:
+            - path: /
+              pathType: Prefix
 
     envs:
       - name: ORGANIZATION_URI
@@ -118,9 +120,6 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-  port: 5042
-  # Annotations to add to the service account
-  annotations: {}
 
 transcend_ingress:
   enabled: true
@@ -135,13 +134,14 @@ transcend_ingress:
     alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-transcend.my-domain.com
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 customer_service:
   type: NodePort
-  port: 5039
-  # Annotations to add to the service account
-  annotations: {}
 
 customer_ingress:
   enabled: true
@@ -156,7 +156,11 @@ customer_ingress:
     alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-customer.my-domain.com
+  hosts:
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 envs:
   - name: ORGANIZATION_URI
@@ -187,9 +191,6 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-  port: 5041
-  # Annotations to add to the service account
-  annotations: {}
 
 transcend_ingress:
   enabled: true
@@ -205,13 +206,14 @@ transcend_ingress:
     alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-transcend.my-domain.com
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 customer_service:
   type: NodePort
-  port: 5040
-  # Annotations to add to the service account
-  annotations: {}
 
 customer_ingress:
   enabled: true
@@ -227,7 +229,11 @@ customer_ingress:
     alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-customer.my-domain.com
+  hosts:
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 envs:
   - name: ORGANIZATION_URI
@@ -264,9 +270,6 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-  port: 5042
-  # Annotations to add to the service account
-  annotations: {}
 
 transcend_ingress:
   enabled: true
@@ -281,13 +284,14 @@ transcend_ingress:
     alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-transcend.my-domain.com
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 customer_service:
   type: NodePort
-  port: 5039
-  # Annotations to add to the service account
-  annotations: {}
 
 customer_ingress:
   enabled: true
@@ -301,7 +305,11 @@ customer_ingress:
     alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-customer.my-domain.com
+  hosts:
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 envs:
   - name: ORGANIZATION_URI
@@ -337,9 +345,6 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-  port: 5042
-  # Annotations to add to the service account
-  annotations: {}
 
 transcend_ingress:
   enabled: true
@@ -354,13 +359,14 @@ transcend_ingress:
     alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-transcend.my-domain.com
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 customer_service:
   type: NodePort
-  port: 5039
-  # Annotations to add to the service account
-  annotations: {}
 
 customer_ingress:
   enabled: true
@@ -369,12 +375,16 @@ customer_ingress:
     alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}, {"HTTPS": 3030}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
     alb.ingress.kubernetes.io/scheme: internal
     alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-customer.my-domain.com
+  hosts:
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 
 envs:
   - name: ORGANIZATION_URI
@@ -402,6 +412,9 @@ pathfinder:
     - name: TRANSCEND_API_KEY
       value: '<TRANSCEND_API_KEY>'
 
+  service:
+    type: NodePort
+
   ingress:
     enabled: true
     annotations:
@@ -413,7 +426,11 @@ pathfinder:
       alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
       alb.ingress.kubernetes.io/tags: env=prod
       alb.ingress.kubernetes.io/target-type: ip
-    host: pathfinder.my-domain.com
+  hosts:
+    - host: <PATHFINDER_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
 ```
 
 ## Configuring Sombra
@@ -479,20 +496,11 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | AWS_REGION                             | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | no     | The AWS Region where the KMS is hosted                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | AWS_KMS_KEY_ARN                        | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The Amazon Resource Name for the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | AWS_ACCESS_KEY_ID                      | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The AWS access key ID, used to access the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| AWS_SECRET_ACCESS_KEY                  | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The AWS secret access key, used to access the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| RUN_DATADOG_APM                        | no                                                                             | false                                                                                                                      | no     | Initialize Datadog tracing. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| DD_APM_PORT                            | no                                                                             | 8126                                                                                                                       | no     | Datadog Agent APM port, used for sending trace data. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| DD_HOST                                | no                                                                             | 'localhost'                                                                                                                | no     | Datadog Agent stat, string prefix name for the stat. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| DD_STATSD_PORT                         | no                                                                             | 8125                                                                                                                       | no     | Datadog Agent metric port, used for sending metrics data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| DD_APM_BLOCKLIST                       | no                                                                             | \[]                                                                                                                        | no     | A blocklist of routes to pass to the trace. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| DD_APM_ANALYTICS                       | no                                                                             | true                                                                                                                       | no     | Filter Analyzed Spans by user-defined tags. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| DD_APM_LOG_INJECTION                   | no                                                                             | true                                                                                                                       | no     | Enable automatic injection of trace IDs in logs for supported logging libraries. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| DD_APM_RUNTIME_METRICS                 | no                                                                             | true                                                                                                                       | no     | Whether to enable capturing runtime metrics. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| DD_TRACE_DEBUG                         | no                                                                             | false                                                                                                                      | no     | Enable debug logging in the tracer. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| DD_SERVICE_NAME                        | no                                                                             | `transcend-hosted-sombra`                                                                                                  | no     | The name for your Sombra. Only applicable when you are using Datadog agent for log and metrics collection.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| AWS_SECRET_ACCESS_KEY                  | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The AWS secret access key, used to access the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                           |
 | LOG_HTTP_TRANSPORT_URL                 | yes if your want to forward Sombra logs to transcend                           | N/A                                                                                                                        | no     | The Transcend Collector's HTTPS ingress endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | LOG_HTTP_TRANSPORT_BATCH_INTERVAL_MS   | no                                                                             | 5000                                                                                                                       | no     | The maximum time to wait between batches of logs sent to the Collector.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | LOG_HTTP_TRANSPORT_BATCH_COUNT         | no                                                                             | 10                                                                                                                         | no     | The maximum number of log lines to send in a single batched request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| DD_SERVICE_NAME                        | yes if your want to forward Sombra logs to transcend                                                                              | `customer_hosted_sombra`                                                                                                  | no     | The name for your Sombra.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 ## Configuring the LLM Classifier
 
@@ -501,9 +509,6 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | LLM_SERVER_PORT        | no       | 6081             | no     | Port on which server listen to.                                                                                      |
 | LLM_SERVER_CONCURRENCY | no       | (cpu count) \* 2 | no     | The number of worker processes for handling requests.                                                                |
 | LLM_SERVER_TIMEOUT     | no       | 120              | no     | Workers silent for more than this many seconds are killed and restarted.                                             |
-| DD_SERVICE             | no       | N/A              | no     | Service name. Only relevant for log and metrics collection through Datadog agent.                                    |
-| DD_ENV                 | no       | N/A              | no     | Deployment environment. Only relevant for log and metrics collection through Datadog agent.                          |
-| DD_AGENT_HOST          | no       | N/A              | no     | Host IP to which logs and metrics are forwarded. Only relevant for log and metrics collection through Datadog agent. |
 
 ## Configuring Pathfinder
 
