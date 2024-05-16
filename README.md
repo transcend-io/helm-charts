@@ -96,11 +96,9 @@ envs_as_secret:
 
 ## Deployment examples
 
-**Note:** This example of `values.yaml` assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
-
-The following are sample `values.yaml` files for deploying Sombra in an AWS EKS cluster with different configurations.
-
-In each example, we are exposing Sombra's `sombra-transcend-ingress` server (for communication with Transcend through an internet-facing load balancer) and Sombra's  `sombra-customer-ingress` server (for communication with internal services through an internal load balancer).
+The following are sample `values.yaml` files for deploying Sombra in an AWS EKS cluster with different configurations. 
+- Each example assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
+- In each example, we are exposing Sombra's `sombra-transcend-ingress` server (for communication with Transcend through an internet-facing load balancer) and Sombra's  `sombra-customer-ingress` server (for communication with internal services through an internal load balancer).
 
 ### Deploying Sombra without TLS
 
