@@ -1,17 +1,17 @@
 # Sombra Helm Charts
 
-Official Helm charts to deploy Sombra and dependent products in Kubernetes cluster.
+Official Helm charts to deploy Sombra and dependent products in a Kubernetes cluster.
 
 ## How to use Helm repository
-1.  Make sure you have a working Kubernetes cluster. If you're planning to deploy LLM Classifier service along with Sombra, LLM Classifer application will require Nvidia GPU to run, so please make sure cluster supports `nvidia.com/gpu`
-as resource.
+1.  Make sure you have a working Kubernetes cluster. If you're planning to deploy the LLM Classifier service along with Sombra, the LLM Classifer application will require Nvidia GPU to run, so please make sure your cluster supports `nvidia.com/gpu`
+as a resource.
 
-2.	Add the helm repo
+2.	Add the Helm repo
 
     ```bash
     helm repo add sombra_chart https://transcend-io.github.io/sombra-helm-chart/
     ```
-3.	To customize the chart and to provide all required variables create an YAML `values.yaml` file with.
+3.	To customize the chart and to provide all required variables, create an YAML `values.yaml` file with.
 
 **Note:** For this example `values.yaml` a working Kubernetes cluster with `alb` AWS application load balancer ingress controller must be deployed. 
 
@@ -81,9 +81,9 @@ envs_as_secret:
 
 ```
 4.	Install the Sombra package.
-    ```
-    helm install some-release sombra-chart/sombra -f ~/values.yaml
-    ```	
+	 ```bash
+	 helm install some-release sombra-chart/sombra -f ~/values.yaml
+	 ```	
 5.	To upgrade the Sombra package after customization.
 	 ```bash
 	 helm upgrade some-release sombra-chart/sombra -f ~/values.yaml
@@ -95,7 +95,7 @@ envs_as_secret:
 
 ## Configuring Sombra
 
-Following is the list of enviroment variables supported by Sombra for its configuration. Please check out our detailed [guide](https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra) on self-hosting Sombra configuration.
+The following is a list of enviroment variables supported by Sombra for its configuration. Please check out our detailed [guide](https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra) on self-hosting Sombra.
 
 | Variables                              | Required                                                                       | default                                                                                                                    | secret | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 | -------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -206,6 +206,7 @@ echo "\n- Clients should pass this Bearer token in the HTTP authorization header
 ```
 
 ### Configure a service to use Pathfinder
+
 For any call to OpenAI, configure your service to use Pathfinder instead by using `<your.pathfinder.domain>/api/open-ai` instead of the OpenAI base host. Individual endpoints can be appended to this base. For example, `https://api.openai.com/v1/chat/completions` becomes `<your.pathfinder.domain>/api/open-ai/v1/chat/completions`.
 
 If you set `REQUIRE_AUTHENTICATION` to `true` in your env file, you will also need to add an Authentication header to any API calls to Pathfinder. For example,
@@ -224,9 +225,9 @@ If you set `REQUIRE_AUTHENTICATION` to `true` in your env file, you will also ne
 **Prerequisite:** A working kubernetes cluster with `alb` ingress controller deployed. LLM Classifer application requires
 Nvidia GPU to run, so please make sure cluster supports `nvidia.com/gpu` resource if you planning to deploy LLM Classifier service along with sombra. 
 
-### Deploying Sombra with dropping tls at loadbalancer
+### Deploying Sombra with dropping TLS at Load Balancer
 
-Follwoing is an example `values.yaml` file for deploying Sombra in a EKS cluster.
+The following is an example `values.yaml` file for deploying Sombra in a EKS cluster.
 Here we exposing Sombra `sombra-transcend-ingress` server, for communication with Transcend, with internet facing load balancer
 and Sombra internal `sombra-customer-ingress` server, for communication with internal services, with internal load balancer.  
 
@@ -374,10 +375,10 @@ envs_as_secret:
 
 ```
   
-### Deploying Sombra with Pathfinder
+### Deploying Sombra and Pathfinder
 
-Follwoing is an example `values.yaml` file for deploying Sombra in a EKS cluster.
-Here we exposing Sombra `sombra-transcend-ingress` server, for communication with Transcend, with internet facing load balancer
+The following is an example `values.yaml` file for deploying Sombra in a EKS cluster.
+Here we are exposing Sombra `sombra-transcend-ingress` server, for communication with Transcend, with internet facing load balancer
 and Sombra internal `sombra-customer-ingress` server and Pathfinder, for communication with internal services, with internal load balancers for each.
 
 ```yaml
