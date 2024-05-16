@@ -33,7 +33,6 @@ spec:
           - path: {{ .path }}
             pathType: {{ .pathType }}
             backend:
-              backend:
               service:
                 name: "{{ $fullName }}-transcend-service"
                 port:
@@ -77,7 +76,6 @@ spec:
           - path: {{ .path }}
             pathType: {{ .pathType }}
             backend:
-              backend:
               service:
                 name: "{{ $fullName }}-customer-service"
                 port:
