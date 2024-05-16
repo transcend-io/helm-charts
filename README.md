@@ -37,7 +37,7 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
         alb.ingress.kubernetes.io/tags: env=dev
         alb.ingress.kubernetes.io/target-type: ip
       hosts:
-        - host: sombra-transcend.my-domain.com
+        - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
           paths:
             - path: /
               pathType: Prefix
@@ -59,7 +59,7 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
         alb.ingress.kubernetes.io/tags: env=dev
         alb.ingress.kubernetes.io/target-type: ip
       hosts:
-        - host: sombra-customer.my-domain.com
+        - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
           paths:
             - path: /
               pathType: Prefix
@@ -135,7 +135,7 @@ transcend_ingress:
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-transcend.my-domain.com
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -157,7 +157,7 @@ customer_ingress:
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-customer.my-domain.com
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -207,7 +207,7 @@ transcend_ingress:
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-transcend.my-domain.com
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -230,7 +230,7 @@ customer_ingress:
     alb.ingress.kubernetes.io/tags: env=dev
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-customer.my-domain.com
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -285,7 +285,7 @@ transcend_ingress:
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-transcend.my-domain.com
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -306,7 +306,7 @@ customer_ingress:
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-customer.my-domain.com
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -360,7 +360,7 @@ transcend_ingress:
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-transcend.my-domain.com
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -381,7 +381,7 @@ customer_ingress:
     alb.ingress.kubernetes.io/tags: env=prod
     alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: sombra-transcend.my-domain.com
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -427,7 +427,7 @@ pathfinder:
       alb.ingress.kubernetes.io/tags: env=prod
       alb.ingress.kubernetes.io/target-type: ip
   hosts:
-    - host: pathfinder.my-domain.com
+    - host: <PATHFINDER_INGRESS_DOMAIN>
       paths:
         - path: /
           pathType: Prefix
@@ -500,6 +500,7 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | LOG_HTTP_TRANSPORT_URL                 | yes if your want to forward Sombra logs to transcend                           | N/A                                                                                                                        | no     | The Transcend Collector's HTTPS ingress endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | LOG_HTTP_TRANSPORT_BATCH_INTERVAL_MS   | no                                                                             | 5000                                                                                                                       | no     | The maximum time to wait between batches of logs sent to the Collector.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | LOG_HTTP_TRANSPORT_BATCH_COUNT         | no                                                                             | 10                                                                                                                         | no     | The maximum number of log lines to send in a single batched request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| DD_SERVICE_NAME                        | yes if your want to forward Sombra logs to transcend                                                                              | `customer_hosted_sombra`                                                                                                  | no     | The name for your Sombra.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 ## Configuring the LLM Classifier
 

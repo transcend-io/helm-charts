@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   sombra:
   - apiVersion: v2
-    created: "2024-05-16T10:24:12.481601-05:00"
+    created: "2024-05-16T11:58:27.070749-05:00"
     dependencies:
     - condition: llm-classifier.enabled
       name: llm-classifier
@@ -13,7 +13,7 @@ entries:
       repository: ""
       version: 0.2.0
     description: A Helm chart for deploying sombra and its dependent services in Kubernetes
-    digest: 71aeb0890da809ae2d2b4d8b6ff962d137efa21426b0d33e4129dd9988d4e562
+    digest: cd2dd3cfd8335a6bd1b52f95f8e8a123b97509fe4828a0e54c504dcc16b13606
     maintainers:
     - email: dev@transcend.io
       name: Transcend
@@ -23,7 +23,7 @@ entries:
     - https://transcend-io.github.io/sombra-helm-chart/sombra-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v2
-    created: "2024-05-16T10:24:12.479515-05:00"
+    created: "2024-05-16T11:58:27.06953-05:00"
     dependencies:
     - condition: llm-classifier.enabled
       name: llm-classifier
@@ -43,4 +43,4 @@ entries:
     urls:
     - https://transcend-io.github.io/sombra-helm-chart/sombra-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-16T10:24:12.477527-05:00"
+generated: "2024-05-16T11:58:27.068156-05:00"

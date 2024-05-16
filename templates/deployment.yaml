@@ -49,6 +49,8 @@ spec:
             {{- end }}
             - name: IS_MULTI
               value: 'false'
+            - name: DD_SERVICE_NAME
+              value: 'customer_hosted_sombra'
           ports:
             - name: external
               containerPort: {{ .Values.transcend_service.port }}
