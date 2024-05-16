@@ -2,101 +2,107 @@
 
 Official Helm charts to deploy Sombra and related services into a Kubernetes cluster.
 
-## Deploying with Helm 
+## Deploying with Helm
 
 1. Make sure you have a working Kubernetes cluster.
 
 2. Add the Helm repo
 
-   ```bash
-   helm repo add sombra_chart https://transcend-io.github.io/sombra-helm-chart/
-   ```
+  ```bash
+  helm repo add sombra_chart https://transcend-io.github.io/sombra-helm-chart/
+  ```
 
-3. To configure the chart and provide environment variables, create an YAML `values.yaml` file:
+3. To configure the chart and provide environment variables, create a `values.yaml` file:
 
-```yaml
-imageCredentials:
-  registry: docker.transcend.io
-  username: Transcend
-  password: '<TRANSCEND_API_TOKEN>'
+  ```yaml
+  imageCredentials:
+    registry: docker.transcend.io
+    username: Transcend
+    password: '<TRANSCEND_API_TOKEN>'
 
-transcend_service:
-  type: NodePort
-  port: 5042
-  # Annotations to add to the service account
-  annotations: {}
+  transcend_service:
+    type: NodePort
+    port: 5042
+    # Annotations to add to the service account
+    annotations: {}
 
-transcend_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: '5042'
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=dev
-    alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-transcend.my-domain.com
+  transcend_ingress:
+    enabled: true
+    className: alb
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
+      alb.ingress.kubernetes.io/healthcheck-path: /health
+      alb.ingress.kubernetes.io/healthcheck-port: '5042'
+      alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
+      alb.ingress.kubernetes.io/tags: env=dev
+      alb.ingress.kubernetes.io/target-type: ip
+    host: sombra-transcend.my-domain.com
 
-customer_service:
-  type: NodePort
-  port: 5039
-  # Annotations to add to the service account
-  annotations: {}
+  customer_service:
+    type: NodePort
+    port: 5039
+    # Annotations to add to the service account
+    annotations: {}
 
-customer_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: '5039'
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
-    alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=dev
-    alb.ingress.kubernetes.io/target-type: ip
-  host: sombra-customer.my-domain.com
+  customer_ingress:
+    enabled: true
+    className: alb
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
+      alb.ingress.kubernetes.io/healthcheck-path: /health
+      alb.ingress.kubernetes.io/healthcheck-port: '5039'
+      alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
+      alb.ingress.kubernetes.io/tags: env=dev
+      alb.ingress.kubernetes.io/target-type: ip
+    host: sombra-customer.my-domain.com
 
-envs:
-  - name: ORGANIZATION_URI
-    value: '<ORGANIZATION_URI>'
-  - name: EMPLOYEE_AUTHENTICATION_METHODS
-    value: 'transcend,session'
-  - name: DATA_SUBJECT_AUTHENTICATION_METHODS
-    value: 'transcend,session'
+  envs:
+    - name: ORGANIZATION_URI
+      value: '<ORGANIZATION_URI>'
+    - name: EMPLOYEE_AUTHENTICATION_METHODS
+      value: 'transcend,session'
+    - name: DATA_SUBJECT_AUTHENTICATION_METHODS
+      value: 'transcend,session'
 
-envs_as_secret:
-  - name: INTERNAL_KEY_HASH
-    value: '<INTERNAL_KEY_HASH>'
-  - name: JWT_ECDSA_KEY
-    value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
-```
+  envs_as_secret:
+    - name: INTERNAL_KEY_HASH
+      value: '<INTERNAL_KEY_HASH>'
+    - name: JWT_ECDSA_KEY
+      value: '<JWT_ECDSA_KEY>'
+    - name: INTERNAL_KEY
+      value: '<INTERNAL_KEY>'
+  ```
 
-**Note:** This example of `values.yaml` assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
+  **Note:** This example of `values.yaml` assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
+  
+4. Install the package:
 
-4. Install the Sombra package.
-   ```bash
-   helm install some-release sombra-chart/sombra -f ~/values.yaml
-   ```
-5. To upgrade the Sombra package after customization.
-   ```bash
-   helm upgrade some-release sombra-chart/sombra -f ~/values.yaml
-   ```
-6. To uninstalling a Release
-   ```bash
-   helm uninstall some-release
-   ```
+  ```bash
+  helm install some-release sombra-chart/sombra -f ~/values.yaml
+  ```
+
+  _To upgrade the package after customization:_
+
+  ```bash
+  helm upgrade some-release sombra-chart/sombra -f ~/values.yaml
+  ```
+
+  _To uninstall a release:_
+
+  ```bash
+  helm uninstall some-release
+  ```
 
 ## Deployment examples
 
-The following are sample `values.yaml` files for deploying Sombra in an AWS EKS cluster with different configurations. 
+The following are sample `values.yaml` files for deploying Sombra in an AWS EKS cluster with different configurations.
+
 - Each example assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
 - In each example, we are exposing Sombra's `sombra-transcend-ingress` server (for communication with Transcend through an internet-facing load balancer) and Sombra's  `sombra-customer-ingress` server (for communication with internal services through an internal load balancer).
 
@@ -319,12 +325,9 @@ llm-classifier:
   enabled: true
 ```
 
-
-
 ### Deploying Sombra and Pathfinder
 
 The following example adds Pathfinder to the Kubernetes deployment.
-
 
 ```yaml
 imageCredentials:
