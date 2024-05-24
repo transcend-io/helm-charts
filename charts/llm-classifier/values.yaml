@@ -40,6 +40,10 @@ envs:
     value: '2'
   - name: LLM_SERVER_TIMEOUT
     value: '120'
+  # - name: LLM_CERT_PATH
+  #   value: "/etc/llm-classifier/ssl/llm-classifier.cert"
+  # - name: LLM_KEY_PATH
+  #   value: "/etc/llm-classifier/ssl/llm-classifier.key"
 
 # Define resources as per required throughput
 # Make sure cluster support `nvidia.com/gpu` 
@@ -75,6 +79,27 @@ autoscaling:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
+
+tls:
+  enabled: false
+  cert: |-
+    -----BEGIN CERTIFICATE-----
+    <base64>
+    -----END CERTIFICATE-----
+  key: |-
+    -----BEGIN PRIVATE KEY-----
+    <base64>
+    -----END PRIVATE KEY-----
+
+volumes: []
+# - name: llm-classifier-ssl
+#   secret:
+#     secretName: llm-classifier-secrets
+
+volumeMounts: []
+#  - mountPath: "/etc/llm-classifier/ssl"
+#    name: llm-classifier-ssl
+#    readOnly: true
 
 nodeSelector: {}
 
