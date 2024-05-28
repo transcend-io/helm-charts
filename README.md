@@ -333,6 +333,112 @@ llm-classifier:
   enabled: true
 ```
 
+### Deploying the LLM Classifier with tls enabled
+
+This example deploys LLM Classifier with TLS enabled to keep internal communication with sombra encrypted. The LLM Classifer requires an Nvidia GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
+
+```yaml
+imageCredentials:
+  registry: docker.transcend.io
+  username: Transcend
+  password: '<TRANSCEND_API_TOKEN>'
+
+transcend_service:
+  type: NodePort
+
+transcend_ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-port: '5042'
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
+    alb.ingress.kubernetes.io/tags: env=prod
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
+
+customer_service:
+  type: NodePort
+
+customer_ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
+    alb.ingress.kubernetes.io/tags: env=prod
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
+
+envs:
+  - name: ORGANIZATION_URI
+    value: '<ORGANIZATION_URI>'
+  - name: EMPLOYEE_AUTHENTICATION_METHODS
+    value: 'transcend,session'
+  - name: DATA_SUBJECT_AUTHENTICATION_METHODS
+    value: 'transcend,session'
+  - name: LLM_CLASSIFIER_URL
+    value: https://<release-name>-llm-classifier.transcend.svc:6081
+
+envs_as_secret:
+  - name: INTERNAL_KEY_HASH
+    value: '<INTERNAL_KEY_HASH>'
+  - name: JWT_ECDSA_KEY
+    value: '<JWT_ECDSA_KEY>'
+  - name: INTERNAL_KEY
+    value: '<INTERNAL_KEY>'
+
+llm-classifier:
+  enabled: true
+  tls:
+    enabled: true,
+    # saved as secret
+    cert: |-
+      -----BEGIN CERTIFICATE-----
+      <base64>
+      -----END CERTIFICATE-----
+    # saved as secret
+    key: |-
+      -----BEGIN PRIVATE KEY-----
+      <base64>
+      -----END PRIVATE KEY-----
+
+  # volume containg cert and key
+  volumes:
+    - name: llm-classifier-ssl
+      secret:
+        secretName: llm-classifier-secrets
+
+  # mount the directory containing the cert and key to pod
+  volumeMounts:
+    - mountPath: "/etc/llm-classifier/ssl"
+      name: llm-classifier-ssl
+      readOnly: true
+  
+  # Set the location of cert and key in evironment
+  envs:
+    - name: LLM_CERT_PATH
+      value: "/etc/llm-classifier/ssl/llm-classifier.cert"
+    - name: LLM_KEY_PATH
+      value: "/etc/llm-classifier/ssl/llm-classifier.key"
+```
+
 ### Deploying Sombra and Pathfinder
 
 The following example adds Pathfinder to the Kubernetes deployment.
