@@ -598,7 +598,7 @@ envs:
   - name: TRANSCEND_URL
     value: https://api.dev.trancsend.com
   - name: SOMBRA_ID
-    value: '1af17328-e20c-4ba3-af63-f793cf1ecd13'
+    value: '<SOMBRA_ID>'
   # [Optional] Add the following variables in order to utilize the AWS integrations
   - name: AWS_ACCESS_KEY_ID
     value: <AWS_ACCESS_KEY_ID>
