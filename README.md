@@ -598,13 +598,6 @@ envs:
     value: 'transcend,session'
   - name: SOMBRA_ID
     value: '<SOMBRA_ID>'
-  # [Optional] Add the following variables in order to utilize the AWS integrations
-  - name: AWS_ACCESS_KEY_ID
-    value: <AWS_ACCESS_KEY_ID>
-  - name: AWS_SECRET_ACCESS_KEY
-    value: <AWS_SECRET_ACCESS_KEY>
-  - name: AWS_REGION
-    value: <AWS_REGION>
 
 envs_as_secret:
   - name: INTERNAL_KEY_HASH
