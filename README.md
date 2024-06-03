@@ -539,6 +539,96 @@ pathfinder:
           pathType: Prefix
 ```
 
+### Deploying Sombra on Azure
+
+The following example deploys Sombra on Azure. This would require setting up an Application Gateway, which will be used as the ingress controller, on Azure and adding the TLS secret into the cluster.
+
+```yaml
+imageCredentials:
+  registry: docker.transcend.io
+  username: Transcend
+  password: '<TRANSCEND_API_TOKEN>'
+
+transcend_service:
+  type: ClusterIP
+
+transcend_ingress:
+  enabled: true
+  className: 'azure-application-gateway'
+  annotations:
+    appgw.ingress.kubernetes.io/health-probe-hostname: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+    appgw.ingress.kubernetes.io/health-probe-path: /health
+    appgw.ingress.kubernetes.io/health-probe-port: '5042'
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: <SOMBRA_TRANSCEND_TLS_SECRET_NAME>
+      hosts:
+        - <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+
+customer_service:
+  type: ClusterIP
+
+customer_ingress:
+  enabled: true
+  className: 'azure-application-gateway'
+  annotations:
+    appgw.ingress.kubernetes.io/health-probe-hostname: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+    appgw.ingress.kubernetes.io/health-probe-path: /health
+    appgw.ingress.kubernetes.io/health-probe-port: '5039'
+  hosts:
+    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: <SOMBRA_CUSTOMER_TLSSECRET_NAME>
+      hosts:
+        - <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
+
+envs:
+  - name: ORGANIZATION_URI
+    value: '<ORGANIZATION_URI>'
+  - name: EMPLOYEE_AUTHENTICATION_METHODS
+    value: 'transcend,session'
+  - name: DATA_SUBJECT_AUTHENTICATION_METHODS
+    value: 'transcend,session'
+  - name: SOMBRA_ID
+    value: '<SOMBRA_ID>'
+
+envs_as_secret:
+  - name: INTERNAL_KEY_HASH
+    value: <INTERNAL_KEY_HASH>
+  - name: JWT_ECDSA_KEY
+    value: <JWT_ECDSA_KEY>
+  - name: INTERNAL_KEY
+    value: <INTERNAL_KEY>
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 5042
+    scheme: HTTP
+  timeoutSeconds: 100
+  periodSeconds: 30
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 5042
+    scheme: HTTP
+  timeoutSeconds: 100
+  periodSeconds: 30
+  successThreshold: 1
+  failureThreshold: 10
+
+```
+
 ## Configuring Sombra
 
 The following is a list of enviroment variables supported by Sombra for its configuration. Please check out our detailed [guide](https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra) on self-hosting Sombra.
@@ -606,7 +696,9 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | LOG_HTTP_TRANSPORT_URL                 | yes if your want to forward Sombra logs to transcend                           | N/A                                                                                                                        | no     | The Transcend Collector's HTTPS ingress endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | LOG_HTTP_TRANSPORT_BATCH_INTERVAL_MS   | no                                                                             | 5000                                                                                                                       | no     | The maximum time to wait between batches of logs sent to the Collector.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | LOG_HTTP_TRANSPORT_BATCH_COUNT         | no                                                                             | 10                                                                                                                         | no     | The maximum number of log lines to send in a single batched request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| DD_SERVICE_NAME                        | yes if your want to forward Sombra logs to transcend                                                                              | `customer_hosted_sombra`                                                                                                  | no     | The name for your Sombra.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| DD_SERVICE_NAME                        | yes if your want to forward Sombra logs to transcend                                                                              | `customer_hosted_sombra`                                                                                                  | no     | The name for your Sombra.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| AWS_ACCESS_KEY_ID                      | yes if you want to utilize any of the AWS integrations      | N/A  | no     | The AWS access key ID of the IAM user with the STS:AssumeRole                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| AWS_SECRET_ACCESS_KEY                  |  yes if you want to utilize any of the AWS integrations     | N/A  | no     | The AWS secret access key of the IAM user with the STS:AssumeRole                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 ## Configuring the LLM Classifier
 
