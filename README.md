@@ -716,13 +716,12 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | OPEN_AI_API_KEY         | yes                                        | N/A     | yes    | API key for OpenAI, obtained from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).           |
 | PORT                    | no                                         | 3030    | no     | The internal port to run Pathfinder on.                                                                                                   |
 
+## Configuring Preference Store
 
-## Configuring Perference Store
-
-| Variables               | Required                                   | default | secret | Description                                                                                                                               |
-| ----------------------- | ------------------------------------------ | ------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| CONSENT_IDENTIFIER_ENCRYPTION_KEY | no         | N/A          | yes          | The Elliptic Curve Diffie Hellman private key(s), for securely communicating with the data subject. Derived from JWT_ECDSA_KEY by default. First entry is latest.                               |
-| ALLOW_UNAUTHENTICATED_PREFERENCE_UPDATES | no        | flase        | no        |  Enable data subjects to modify their preferences without requiring authentication. This is necessary for CPRA compliance.                                                                          |
+| Variables                                | Required   | default    | secret      | Description                                                                                                                                                          |
+| ---------------------------------------- | -----------| ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CONSENT_IDENTIFIER_ENCRYPTION_KEY        | no         | N/A        | yes         | The Elliptic Curve Diffie Hellman private key(s), for securely communicating with the data subject. Derived from JWT_ECDSA_KEY by default. First entry is latest.    |
+| ALLOW_UNAUTHENTICATED_PREFERENCE_UPDATES | no         | flase      | no          |  Enable data subjects to modify their preferences without requiring authentication. This is necessary for CPRA compliance.                                                                                                                                                                                                                                                                                                      |
 
 ### Generating AUTHENTICATION_KEY_HASH & AUTHENTICATION_KEY for Pathfinder
 
