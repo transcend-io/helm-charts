@@ -707,6 +707,8 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | LLM_SERVER_PORT        | no       | 6081             | no     | Port on which server listen to.                                                                                      |
 | LLM_SERVER_CONCURRENCY | no       | (cpu count) \* 2 | no     | The number of worker processes for handling requests.                                                                |
 | LLM_SERVER_TIMEOUT     | no       | 120              | no     | Workers silent for more than this many seconds are killed and restarted.                                             |
+| LLM_SERVER_BACKLOG     | no       | 500              | no     |The maximum number of pending connections.                                             |
+| LLM_SERVER_WORKER_CONNECTIONS     | no       | 1000              | no     |The maximum number of simultaneous clients.                                        |
 
 ## Configuring Pathfinder
 
