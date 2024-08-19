@@ -9,7 +9,7 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
 2. Add the Helm repo
 
     ```bash
-    helm repo add transcend https://transcend-io.github.io/helm-chart/
+    helm repo add transcend https://transcend-io.github.io/helm-charts/
     ```
 
 3. To configure the chart and provide environment variables, create a `values.yaml` file:
