@@ -9,7 +9,7 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
 2. Add the Helm repo
 
     ```bash
-    helm repo add sombra_chart https://transcend-io.github.io/sombra-helm-chart/
+    helm repo add transcend https://transcend-io.github.io/helm-chart/
     ```
 
 3. To configure the chart and provide environment variables, create a `values.yaml` file:
@@ -86,13 +86,13 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
 4. Install the package:
 
     ```bash
-    helm install some-release sombra-chart/sombra -f ~/values.yaml
+    helm install some-release transcend/sombra -f ~/values.yaml
     ```
 
     _To upgrade the package after customization:_
 
     ```bash
-    helm upgrade some-release sombra-chart/sombra -f ~/values.yaml
+    helm upgrade some-release transcend/sombra -f ~/values.yaml
     ```
 
     _To uninstall a release:_

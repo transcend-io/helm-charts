@@ -17,5 +17,8 @@
 * TLS support llm-classifier
 
 ## 0.3.1
- * Update docs
- * Remove old helm packages
+* Update docs
+* Remove old helm packages
+
+## 0.4.0
+* Repo name change
