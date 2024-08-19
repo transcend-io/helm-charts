@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# packaged files
+*.tgz
