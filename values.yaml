@@ -8,7 +8,6 @@ createNewNameSpace: true
 # Name of new namespace, to use existing one set `createNewNameSpace` to `false`.
 namespace: transcend
 
-
 #  Number of instances of Datadog Operator
 replicaCount: 1
 
@@ -57,7 +56,7 @@ podLabels: {}
 # about configuring TLS communication between the load balancer and servers,
 # see the TLS Certificate section below.
 #
-# sombra-customer-ingress: 
+# sombra-customer-ingress:
 #
 # This server handles all communication that come inbound from your
 # internal servers. Here, your customer data is encrypted before it enters
@@ -86,7 +85,8 @@ transcend_service:
 ingress:
   enabled: false
   className: ""
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
@@ -139,28 +139,28 @@ customer_ingress:
 # These environment variables are saved as secret
 envs_as_secret:
   - name: JWT_ECDSA_KEY
-    value: '<JWT_ECDSA_KEY>'
+    value: "<JWT_ECDSA_KEY>"
 
 envs:
   - name: ORGANIZATION_URI
-    value: 'some-org'
+    value: "some-org"
   - name: SOMBRA_ID
-    value: 'some-id'
+    value: "some-id"
   - name: EMPLOYEE_AUTHENTICATION_METHODS
-    value: 'transcend,session'
+    value: "transcend,session"
   - name: DATA_SUBJECT_AUTHENTICATION_METHODS
-    value: 'transcend,session'
+    value: "transcend,session"
   - name: LLM_CLASSIFIER_URL
     value: http://<RELEASE_NAME>llm-classifier.transcend.svc:6081
 
 # Customise the resousrces as per througput need
 resources:
-   requests:
-    memory: '1000Mi'
-    cpu: '2000m'
-   limits:
-    memory: '2000Mi'
-    cpu: '3000m'
+  requests:
+    memory: "1000Mi"
+    cpu: "2000m"
+  limits:
+    memory: "2000Mi"
+    cpu: "3000m"
 
 livenessProbe:
   httpGet:
@@ -187,7 +187,7 @@ affinity: {}
 
 global:
   imagePullSecrets:
-  - name: transcend-registry
+    - name: transcend-registry
 
 # Data classification service using LLM model
 llm-classfier:

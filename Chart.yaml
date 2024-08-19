@@ -4,12 +4,12 @@ description: A Helm chart for deploying sombra and its dependent services in Kub
 type: application
 version: 0.3.0
 maintainers:
-- name: Transcend
-  email: dev@transcend.io
+  - name: Transcend
+    email: dev@transcend.io
 dependencies:
-- name: llm-classifier
-  condition: llm-classifier.enabled
-  version: "0.2.0"
-- name: pathfinder
-  condition: pathfinder.enabled
-  version: "0.2.0"
+  - name: llm-classifier
+    condition: llm-classifier.enabled
+    version: "0.2.0"
+  - name: pathfinder
+    condition: pathfinder.enabled
+    version: "0.2.0"

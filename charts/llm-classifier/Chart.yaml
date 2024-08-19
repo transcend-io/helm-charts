@@ -3,4 +3,3 @@ name: llm-classifier
 description: A Helm chart for deploying LLM Classifier in Kubernetes cluster
 type: application
 version: 0.2.0
-

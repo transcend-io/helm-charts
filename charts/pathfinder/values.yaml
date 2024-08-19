@@ -47,7 +47,8 @@ ingress:
   #      - chart-example.local
 
 # Define resources as per required throughput
-resources: {}
+resources:
+  {}
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
@@ -68,7 +69,7 @@ readinessProbe:
 
 # These environment variables are required and saved as secrets
 envs_as_secret:
-  - name: AUTHENTICATION_KEY_HASH 
+  - name: AUTHENTICATION_KEY_HASH
     value: null
   - name: OPEN_AI_API_KEY
     value: null
@@ -77,9 +78,9 @@ envs_as_secret:
 
 envs:
   - name: PORT
-    value: '3030'
+    value: "3030"
   - name: REQUIRE_AUTHENTICATION
-    value: 'true'
+    value: "true"
 
 # Enable to use horizontal pod autoscaling based of metrics
 autoscaling:
@@ -100,4 +101,3 @@ proxyPolicy:
   enabled: false
   policy: {}
   # define your poicy here in uaml format
-
