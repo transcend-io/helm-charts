@@ -11,7 +11,7 @@
     ```
 4. Update the index file
     ```bash
-        helm repo index --url https://transcend-io.github.io/helm-chart/ .
+        helm repo index --url https://transcend-io.github.io/helm-charts/ .
     ```
 5.  Push the branch after commiting the changes
 6.  Request for PR review.
