@@ -1,3 +1,5 @@
+This chart releases automatically via CI on push to the `main` branch.
+
 # Steps required to release a new chart version manually:
 
 1.  Create a new release branch from main branch
