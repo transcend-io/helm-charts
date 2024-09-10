@@ -1,4 +1,4 @@
-# Steps required to release a new chart version:
+# Steps required to release a new chart version manually:
 
 1.  Create a new release branch from main branch
     ```bash
