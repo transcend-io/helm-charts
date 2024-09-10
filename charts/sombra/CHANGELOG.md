@@ -22,3 +22,6 @@
 
 ## 0.4.0
 * Repo name change
+
+## 0.5.0
+* Repo structure change
