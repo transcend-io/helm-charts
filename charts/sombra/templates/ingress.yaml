@@ -1,6 +1,6 @@
 {{- $fullName := include "sombra-chart.fullname" . -}}
 {{- if .Values.transcend_ingress.enabled -}}
-{{- $trancenIngressPort := .Values.transcend_service.port -}}
+{{- $transcendIngressPort := .Values.transcend_service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -36,13 +36,12 @@ spec:
               service:
                 name: "{{ $fullName }}-transcend-service"
                 port:
-                  number: {{ $trancenIngressPort }}
+                  number: {{ $transcendIngressPort }}
           {{- end }}
     {{- end }}
 {{- end }}
 ---
 {{- if .Values.customer_ingress.enabled -}}
-{{- $fullCustomerServiceName := "sombra-customer-service" -}}
 {{- $customerIngressPort := .Values.customer_service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress

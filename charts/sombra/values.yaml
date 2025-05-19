@@ -8,7 +8,6 @@ createNewNameSpace: true
 # Name of new namespace, to use existing one set `createNewNameSpace` to `false`.
 namespace: transcend
 
-
 #  Number of instances for the Sombra service.
 replicaCount: 1
 
@@ -18,6 +17,10 @@ replicaCount: 1
 # the Admin Dashboard (note: a scope is not required for the API key).
 # This will be stored as a docker config secret, named `transcend-registry`
 imageCredentials:
+  # Set this to false to disable creating a dockerconfigjson file with these credentials.
+  # Useful when you don't need username:password based auth for the registry, for ex. when
+  # pulling using IAM from ECR.
+  enabled: true
   registry: docker.transcend.io
   username: Transcend
   password: null
@@ -37,7 +40,7 @@ fullnameOverride: ""
 
 # Define annotations for sombra pod
 podAnnotations: {}
-# Define lables for sombra pod
+# Define labels for sombra pod
 podLabels: {}
 
 ########### Sombra Architecture ###############
@@ -153,6 +156,11 @@ envs:
   - name: LLM_CLASSIFIER_URL
     value: http://<RELEASE_NAME>llm-classifier.transcend.svc:6081
 
+isMultiTenant: false
+
+datadog:
+  serviceName: 'customer_hosted_sombra'
+
 # Customise the resousrces as per througput need
 resources:
    requests:
@@ -190,7 +198,7 @@ global:
   - name: transcend-registry
 
 # Data classification service using LLM model
-llm-classfier:
+llm-classifier:
   enabled: false
 
 # Pathfinder is AI governance layer that gives you control and auditability on data going in and out of LLMs.
