@@ -9,7 +9,7 @@ createNewNameSpace: true
 namespace: transcend
 
 
-#  Number of instances of Datadog Operator
+#  Number of instances for the Sombra service.
 replicaCount: 1
 
 # Registry server and credential details
@@ -57,7 +57,7 @@ podLabels: {}
 # about configuring TLS communication between the load balancer and servers,
 # see the TLS Certificate section below.
 #
-# sombra-customer-ingress: 
+# sombra-customer-ingress:
 #
 # This server handles all communication that come inbound from your
 # internal servers. Here, your customer data is encrypted before it enters
