@@ -34,7 +34,7 @@ spec:
     -  type: External
        external:
          metric:
-           name: $name
+           name: {{ $value.name }}
            selector:
              {{- with $value.selectorLabels }}
              matchLabels:

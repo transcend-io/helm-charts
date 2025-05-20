@@ -35,3 +35,6 @@
 
 ## 0.6.1
 * Fix the issue with the `isMultiTenant` parameter by converting it to a string before using it.
+
+## 0.6.2
+* Fix issue with external metrics resolution for Sombras Horizontal Pod Autoscaler.
