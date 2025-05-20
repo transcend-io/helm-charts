@@ -48,9 +48,9 @@ spec:
               value: {{ $value.value | quote }}
             {{- end }}
             - name: IS_MULTI
-              value: {{ .Values.isMultiTenant | quote }}
+              value: {{ .Values.isMultiTenant | toString }}
             - name: DD_SERVICE_NAME
-              value: {{ .Values.datadog.serviceName | quote }}
+              value: {{ .Values.datadog.serviceName }}
           ports:
             - name: external
               containerPort: {{ .Values.transcend_service.port }}
