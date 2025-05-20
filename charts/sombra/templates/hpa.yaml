@@ -30,4 +30,19 @@ spec:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
+    {{- range $name, $value := .Values.autoscaling.externalMetrics }}
+    -  type: External
+       external:
+         metric:
+           name: $name
+           selector:
+             {{- with $value.selectorLabels }}
+             matchLabels:
+               {{- toYaml . | nindent 15 }}
+             {{- end }}
+         {{- with $value.target }}
+         target:
+           {{- toYaml . | nindent 11 }}
+        {{- end }}
+    {{- end }}
 {{- end }}

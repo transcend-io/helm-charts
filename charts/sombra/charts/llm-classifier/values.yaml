@@ -3,11 +3,10 @@
 # Declare variables to be passed into your templates.
 
 #  Namespace in which resources will be deployed
-enabled: false
 namespace: transcend
-#  Number of instances of Datadog Operator
+#  Number of instances for the LLM Classifier service.
 replicaCount: 1
-# Set it to `true` to deploy llm-classifier resources. 
+# Set it to `true` to deploy llm-classifier resources.
 enabled: false
 
 image:
@@ -46,7 +45,7 @@ envs:
   #   value: "/etc/llm-classifier/ssl/llm-classifier.key"
 
 # Define resources as per required throughput
-# Make sure cluster support `nvidia.com/gpu` 
+# Make sure cluster support `nvidia.com/gpu`
 resources:
   limits:
     memory: 8Gi

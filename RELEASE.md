@@ -15,6 +15,6 @@ This chart releases automatically via CI on push to the `main` branch.
     ```bash
         helm repo index --url https://transcend-io.github.io/helm-charts/ .
     ```
-5.  Push the branch after commiting the changes
+5.  Push the branch after committing the changes
 6.  Request for PR review.
 7.  Once PR is merged by repo owner, a new version is published by Github Pages.

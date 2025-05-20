@@ -25,3 +25,10 @@
 
 ## 0.5.0
 * Repo structure change
+
+## 0.6.0
+* Allow for more advanced Sombra configurations to be deployed.
+* Allow for external metrics to be used with the Sombra HPA.
+* Allow for Datadog `DD_SERVICE_NAME` environment variable to be customizable.
+* Ignore generating a `.dockerconfigjson` if `imagePullSecrets`.`enabled` is set to false.
+* Fix typos.

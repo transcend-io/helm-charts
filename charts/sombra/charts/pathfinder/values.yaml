@@ -4,7 +4,7 @@
 
 #  Namespace in which resources will be deployed
 namespace: transcend
-#  Number of instances of Datadog Operator
+#  Number of instances for the Pathfinder service.
 replicaCount: 1
 # Set it to `true` to deploy Pathfinder  resources
 enabled: false
@@ -68,7 +68,7 @@ readinessProbe:
 
 # These environment variables are required and saved as secrets
 envs_as_secret:
-  - name: AUTHENTICATION_KEY_HASH 
+  - name: AUTHENTICATION_KEY_HASH
     value: null
   - name: OPEN_AI_API_KEY
     value: null
