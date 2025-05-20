@@ -32,3 +32,6 @@
 * Allow for Datadog `DD_SERVICE_NAME` environment variable to be customizable.
 * Ignore generating a `.dockerconfigjson` if `imagePullSecrets`.`enabled` is set to false.
 * Fix typos.
+
+## 0.6.1
+* Fix issue with `isMultiTenant` parameter to convert it to a string before using it.
