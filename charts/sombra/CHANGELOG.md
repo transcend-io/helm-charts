@@ -34,4 +34,4 @@
 * Fix typos.
 
 ## 0.6.1
-* Fix issue with `isMultiTenant` parameter to convert it to a string before using it.
+* Fix the issue with the `isMultiTenant` parameter by converting it to a string before using it.
