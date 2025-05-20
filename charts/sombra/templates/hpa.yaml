@@ -36,9 +36,13 @@ spec:
          metric:
            name: $name
            selector:
+             {{- with $value.selectorLabels }}
              matchLabels:
-               {{- include $value.selectorLabels . | nindent 14 }}
+               {{- toYaml . | nindent 15 }}
+             {{- end }}
+         {{- with $value.target }}
          target:
-           {{- include $value.target . | nindent 10 }}
+           {{- toYaml . | nindent 11 }}
+        {{- end }}
     {{- end }}
 {{- end }}
