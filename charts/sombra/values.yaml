@@ -2,13 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-#  Namespace in which resources will be deployed
+# Namespace in which resources will be deployed
 # Create new namespace
 createNewNameSpace: true
 # Name of new namespace, to use existing one set `createNewNameSpace` to `false`.
 namespace: transcend
 
-#  Number of instances for the Sombra service.
+# Number of instances for the Sombra service.
 replicaCount: 1
 
 # Registry server and credential details
@@ -38,23 +38,23 @@ nameOverride: ""
 # Override the full qualified app name
 fullnameOverride: ""
 
-# Define annotations for sombra pod
+# Define annotations for the Sombra pod
 podAnnotations: {}
-# Define labels for sombra pod
+# Define labels for the Sombra pod
 podLabels: {}
 
 ########### Sombra Architecture ###############
 # @see https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra
 #
-# The Sombra container is running two servers sombra-customer-ingress
+# The Sombra container runs two servers: sombra-customer-ingress
 # and sombra-transcend-ingress. Typically, each server is mapped to its
 # own URL and load balancer. It is also possible to deploy a single URL used for
-# both servers you can also map both servers to the same load balancer
+# both servers by mapping both servers to the same load balancer
 # with a single URL, but different ports.
 
 # It is common to terminate TLS at the load balancer, and
 # have the communication between the load balancer and Sombra servers happen
-# over HTTP. Sombra support TLS connection between the load balancer and server, however, you
+# over HTTP. Sombra supports TLS connection between the load balancer and server, however, you
 # will need to provide the certificate through environment variables, and you
 # should consider a process for cycling this certificate. To read more
 # about configuring TLS communication between the load balancer and servers,
@@ -62,7 +62,7 @@ podLabels: {}
 #
 # sombra-customer-ingress:
 #
-# This server handles all communication that come inbound from your
+# This server handles all communication that comes inbound from your
 # internal servers. Here, your customer data is encrypted before it enters
 # the Transcend cloud.
 #
@@ -79,42 +79,6 @@ podLabels: {}
 # Container HTTP Port (terminating TLS at load balancer): 5042
 # Container HTTPS Port (requires TLS Certificate): 5041
 
-# Define service and ingress for sombra-transcend-ingress server
-transcend_service:
-  type: ClusterIP
-  port: 5042
-  # Annotations to add to the service account
-  annotations: {}
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-transcend_ingress:
-  enabled: false
-  className: nginx
-  annotations: {}
-  hosts:
-    - host: sombra-transcend.my-domain.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 # Define service and ingress for sombra-customer-ingress server
 customer_service:
   type: ClusterIP
@@ -128,6 +92,30 @@ customer_ingress:
   annotations: {}
   hosts:
     - host: sombra-customer.my-domain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# Define service and ingress for sombra-transcend-ingress server
+transcend_service:
+  type: ClusterIP
+  port: 5042
+  # Annotations to add to the service account
+  annotations: {}
+
+# Optionally set up a "Direct Connection" for Transcend.
+transcend_ingress:
+  # If this is false, Sombra will use the "Reverse Tunnel" method to connect. We recommend leaving this as false.
+  # Read more on the reverse tunnel here: https://docs.transcend.io/docs/articles/sombra/deploying/customizing-sombra/networking#connecting-to-transcend
+  enabled: false
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: sombra-transcend.my-domain.com
       paths:
         - path: /
           pathType: Prefix
@@ -154,14 +142,16 @@ envs:
   - name: DATA_SUBJECT_AUTHENTICATION_METHODS
     value: 'transcend,session'
   - name: LLM_CLASSIFIER_URL
-    value: http://<RELEASE_NAME>llm-classifier.transcend.svc:6081
+    value: http://<RELEASE_NAME>-llm-classifier.transcend.svc:6081
 
+# Set to true when deploying multiple Sombra gateways
 isMultiTenant: false
 
+# Configuration for log forwarding to Transcend
 datadog:
   serviceName: 'customer_hosted_sombra'
 
-# Customise the resousrces as per througput need
+# Resource requests and limits for the Sombra pod
 resources:
    requests:
     memory: '1000Mi'
@@ -170,6 +160,7 @@ resources:
     memory: '2000Mi'
     cpu: '3000m'
 
+# Health check configuration
 livenessProbe:
   httpGet:
     path: /health
@@ -181,7 +172,7 @@ readinessProbe:
     port: 5042
     scheme: HTTP
 
-# Enable to use horizontal pod autoscaling based of metrics
+# Enable to use horizontal pod autoscaling based off metrics
 autoscaling:
   enabled: false
   minReplicas: 2
@@ -193,10 +184,12 @@ autoscaling:
 #      selectorLabels: {}
 #      target: {}
 
+# Node selection and scheduling configuration
 nodeSelector: {}
 tolerations: []
 affinity: {}
 
+# Global configuration
 global:
   imagePullSecrets:
   - name: transcend-registry

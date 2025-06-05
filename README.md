@@ -23,25 +23,6 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
     transcend_service:
       type: NodePort
 
-    transcend_ingress:
-      enabled: true
-      className: alb
-      annotations:
-        alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-        alb.ingress.kubernetes.io/healthcheck-path: /health
-        alb.ingress.kubernetes.io/healthcheck-port: '5042'
-        alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
-        alb.ingress.kubernetes.io/scheme: internet-facing
-        alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
-        alb.ingress.kubernetes.io/tags: env=dev
-        alb.ingress.kubernetes.io/target-type: ip
-      hosts:
-        - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-          paths:
-            - path: /
-              pathType: Prefix
-
     customer_service:
       type: NodePort
 
@@ -77,8 +58,6 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
         value: '<INTERNAL_KEY_HASH>'
       - name: JWT_ECDSA_KEY
         value: '<JWT_ECDSA_KEY>'
-      - name: INTERNAL_KEY
-        value: '<INTERNAL_KEY>'
     ```
 
    **Note:** This example of `values.yaml` assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
@@ -121,25 +100,6 @@ imageCredentials:
 transcend_service:
   type: NodePort
 
-transcend_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: '5042'
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=dev
-    alb.ingress.kubernetes.io/target-type: ip
-  hosts:
-    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
-
 customer_service:
   type: NodePort
 
@@ -175,8 +135,6 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
 ```
 
 ### Deploying Sombra with TLS
@@ -191,26 +149,6 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-
-transcend_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: '5041'
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
-    alb.ingress.kubernetes.io/backend-protocol: HTTPS
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5041}]'
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=dev
-    alb.ingress.kubernetes.io/target-type: ip
-  hosts:
-    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
 
 customer_service:
   type: NodePort
@@ -248,19 +186,19 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
-  - name: SOMBRA_TLS_KEY
-    value: <SOMBRA_TLS_KEY>
-  - name: SOMBRA_TLS_KEY_PASSPHRASE
-    value: <SOMBRA_TLS_KEY_PASSPHRASE>
+  # You must include certificate information for Sombra's server.
   - name: SOMBRA_TLS_CERT
     value: <SOMBRA_TLS_CERT>
+  - name: SOMBRA_TLS_KEY
+    value: <SOMBRA_TLS_KEY>
+  # An optional passphrase associated with your TLS private key. If you set a passphrase when you created your key and certificate, you must provide it here.
+  - name: SOMBRA_TLS_KEY_PASSPHRASE
+    value: <SOMBRA_TLS_KEY_PASSPHRASE>
 ```
 
 ### Deploying Sombra and the LLM Classifier
 
-This example deploys Sombra with an accompanying LLM Classifier. The LLM Classifer requires an Nvidia GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
+This example deploys Sombra with an accompanying LLM Classifier. The LLM Classifer requires an NVIDIA GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
 
 ```yaml
 imageCredentials:
@@ -270,25 +208,6 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-
-transcend_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: '5042'
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=prod
-    alb.ingress.kubernetes.io/target-type: ip
-  hosts:
-    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
 
 customer_service:
   type: NodePort
@@ -326,16 +245,14 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
 
 llm-classifier:
   enabled: true
 ```
 
-### Deploying the LLM Classifier with tls enabled
+### Deploying the LLM Classifier with TLS enabled
 
-This example deploys LLM Classifier with TLS enabled to keep internal communication with sombra encrypted. The LLM Classifer requires an Nvidia GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
+This example deploys LLM Classifier with TLS enabled to keep internal communication with sombra encrypted. The LLM Classifer requires an NVIDIA GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
 
 ```yaml
 imageCredentials:
@@ -345,25 +262,6 @@ imageCredentials:
 
 transcend_service:
   type: NodePort
-
-transcend_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: '5042'
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=prod
-    alb.ingress.kubernetes.io/target-type: ip
-  hosts:
-    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
 
 customer_service:
   type: NodePort
@@ -401,8 +299,6 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
 
 llm-classifier:
   enabled: true
@@ -439,106 +335,6 @@ llm-classifier:
       value: "/etc/llm-classifier/ssl/llm-classifier.key"
 ```
 
-### Deploying Sombra and Pathfinder
-
-The following example adds Pathfinder to the Kubernetes deployment.
-
-```yaml
-imageCredentials:
-  registry: docker.transcend.io
-  username: Transcend
-  password: '<TRANSCEND_API_TOKEN>'
-
-transcend_service:
-  type: NodePort
-
-transcend_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: '5042'
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=prod
-    alb.ingress.kubernetes.io/target-type: ip
-  hosts:
-    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
-
-customer_service:
-  type: NodePort
-
-customer_ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5039}]'
-    alb.ingress.kubernetes.io/scheme: internal
-    alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
-    alb.ingress.kubernetes.io/tags: env=prod
-    alb.ingress.kubernetes.io/target-type: ip
-  hosts:
-    - host: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
-
-envs:
-  - name: ORGANIZATION_URI
-    value: '<ORGANIZATION_URI>'
-  - name: EMPLOYEE_AUTHENTICATION_METHODS
-    value: 'transcend,session'
-  - name: DATA_SUBJECT_AUTHENTICATION_METHODS
-    value: 'transcend,session'
-
-envs_as_secret:
-  - name: INTERNAL_KEY_HASH
-    value: '<INTERNAL_KEY_HASH>'
-  - name: JWT_ECDSA_KEY
-    value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
-
-pathfinder:
-  enabled: true
-  envs_as_secret:
-    - name: OPEN_AI_API_KEY
-      value: '<OPEN_AI_API_KEY>'
-    - name: AUTHENTICATION_KEY_HASH
-      value: '<AUTHENTICATION_KEY_HASH>'
-    - name: TRANSCEND_API_KEY
-      value: '<TRANSCEND_API_KEY>'
-
-  service:
-    type: NodePort
-
-  ingress:
-    enabled: true
-    annotations:
-      alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
-      alb.ingress.kubernetes.io/healthcheck-path: /health
-      alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 3030}]'
-      alb.ingress.kubernetes.io/scheme: internal
-      alb.ingress.kubernetes.io/subnets: <VPC_PRIVATE_SUBNET>
-      alb.ingress.kubernetes.io/tags: env=prod
-      alb.ingress.kubernetes.io/target-type: ip
-  hosts:
-    - host: <PATHFINDER_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
-```
-
 ### Deploying Sombra on Azure
 
 The following example deploys Sombra on Azure. This would require setting up an Application Gateway, which will be used as the ingress controller, on Azure and adding the TLS secret into the cluster.
@@ -552,23 +348,6 @@ imageCredentials:
 transcend_service:
   type: ClusterIP
 
-transcend_ingress:
-  enabled: true
-  className: 'azure-application-gateway'
-  annotations:
-    appgw.ingress.kubernetes.io/health-probe-hostname: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-    appgw.ingress.kubernetes.io/health-probe-path: /health
-    appgw.ingress.kubernetes.io/health-probe-port: '5042'
-  hosts:
-    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: <SOMBRA_TRANSCEND_TLS_SECRET_NAME>
-      hosts:
-        - <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
-
 customer_service:
   type: ClusterIP
 
@@ -576,7 +355,7 @@ customer_ingress:
   enabled: true
   className: 'azure-application-gateway'
   annotations:
-    appgw.ingress.kubernetes.io/health-probe-hostname: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+    appgw.ingress.kubernetes.io/health-probe-hostname: <SOMBRA_CUSTOMER_INGRESS_DOMAIN>
     appgw.ingress.kubernetes.io/health-probe-path: /health
     appgw.ingress.kubernetes.io/health-probe-port: '5039'
   hosts:
@@ -604,8 +383,6 @@ envs_as_secret:
     value: <INTERNAL_KEY_HASH>
   - name: JWT_ECDSA_KEY
     value: <JWT_ECDSA_KEY>
-  - name: INTERNAL_KEY
-    value: <INTERNAL_KEY>
 
 livenessProbe:
   httpGet:
@@ -631,12 +408,65 @@ readinessProbe:
 
 ## Configuring Sombra
 
-The following is a list of enviroment variables supported by Sombra for its configuration. Please check out our detailed [guide](https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra) on self-hosting Sombra.
+### Using the Direct Connection method
+
+To connect Sombra with Transcend, there are [two connection methods: Reverse Tunnel and Direct Connection](https://docs.transcend.io/docs/articles/sombra/deploying/customizing-sombra/networking#connecting-to-transcend). By default, Sombra uses a Reverse Tunnel, which we recommend. 
+
+You can optionally configure Sombra to use the Direct Connection method by enabling `transcend_ingress` in `values.yaml`:
+
+```yaml
+transcend_ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-port: '5042'
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
+    alb.ingress.kubernetes.io/tags: env=dev
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
+```
+
+Or with TLS:
+
+```yaml
+transcend_ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-port: '5041'
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5041}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
+    alb.ingress.kubernetes.io/tags: env=dev
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
+```
+
+### Environment Variables
+
+The following is a list of environment variables supported by Sombra for its configuration. Please check out our detailed [guide](https://docs.transcend.io/docs/articles/sombra/deploying/deployment-options/helm) on self-hosting Sombra.
 
 | Variables                              | Required                                                                       | default                                                                                                                    | secret | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | -------------------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ORGANIZATION_URI                       | yes                                                                            | N/A                                                                                                                        | no     | This value can be found under "Sombra Audience" here: [https://app.transcend.io/infrastructure/sombra/sombras](https://app.transcend.io/infrastructure/sombra/sombras)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| SOMBRA_ID                              | no                                                                             | N/A                                                                                                                        | no     | The SOMBRA_ID parameter is only required when deploying multiple Sombra gateways. This value can be found under "ID" here: [https://app.transcend.io/infrastructure/sombra/sombras](https://app.transcend.io/infrastructure/sombra/sombras).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| SOMBRA_ID                              | yes, when deploying multiple Sombra gateways                                                                             | N/A                                                                                                                        | no     | The SOMBRA_ID parameter is required when deploying multiple Sombra gateways. This value can be found under "ID" here: [https://app.transcend.io/infrastructure/sombra/sombras](https://app.transcend.io/infrastructure/sombra/sombras).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | EMPLOYEE_AUTHENTICATION_METHODS        | yes                                                                            | N/A                                                                                                                        | no     | We recommend starting with the 'transcend' authentication method. After Single Sign On is setup, 'transcend' can be switched to 'saml'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | DATA_SUBJECT_AUTHENTICATION_METHODS    | yes                                                                            | N/A                                                                                                                        | no     | We recommend starting with the 'transcend' authentication method. After Account Login is setup, 'transcend' can be switched to 'oauth' or 'jwt'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | JWT_ECDSA_KEY                          | yes                                                                            | N/A                                                                                                                        | yes    | The root secrets that you should generate yourself and keep secret. If you are migrating from a Transcend-hosted multi-tenant Sombra to an on-premise and are mid-implementation, it is critical that you re-use the same JWT_ECDSA_KEY from the existing instance. If you already have connected integrations and DSRs, you should deploy the on premise Sombra gateway with the same JWT_ECDSA_KEY and then run a key rotation after the gateway is deployed. To obtain the JWT_ECDSA_KEY reach out to your account manager over Slack or email [support@transcend.io](mailto:support@transcend.io) to grant access for you to download the key. You will only be able to reveal the key once for security reasons. The key can be obtained by clicking the Reveal Multi Tenant Root Secret button on the Sombra Gateways panel in the Admin UI. |
@@ -692,11 +522,11 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | AWS_REGION                             | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | no     | The AWS Region where the KMS is hosted                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | AWS_KMS_KEY_ARN                        | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The Amazon Resource Name for the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | AWS_ACCESS_KEY_ID                      | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The AWS access key ID, used to access the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| AWS_SECRET_ACCESS_KEY                  | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The AWS secret access key, used to access the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |                                                                                                           |
+| AWS_SECRET_ACCESS_KEY                  | yes, when you are using `AWS` as `KMS_PROVIDER`.                               | N/A                                                                                                                        | yes    | The AWS secret access key, used to access the Amazon KMS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | LOG_HTTP_TRANSPORT_URL                 | yes if your want to forward Sombra logs to transcend                           | N/A                                                                                                                        | no     | The Transcend Collector's HTTPS ingress endpoint.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | LOG_HTTP_TRANSPORT_BATCH_INTERVAL_MS   | no                                                                             | 5000                                                                                                                       | no     | The maximum time to wait between batches of logs sent to the Collector.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | LOG_HTTP_TRANSPORT_BATCH_COUNT         | no                                                                             | 10                                                                                                                         | no     | The maximum number of log lines to send in a single batched request.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| DD_SERVICE_NAME                        | yes if your want to forward Sombra logs to transcend                                                                              | `customer_hosted_sombra`                                                                                                  | no     | The name for your Sombra.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| DD_SERVICE_NAME                        | yes if you want to forward Sombra logs to Transcend                                                                              | `customer_hosted_sombra`                                                                                                  | no     | The name for your Sombra instance in Transcend's logs. This is used for log correlation and monitoring.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | AWS_ACCESS_KEY_ID                      | yes if you want to utilize any of the AWS integrations      | N/A  | no     | The AWS access key ID of the IAM user with the STS:AssumeRole                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | AWS_SECRET_ACCESS_KEY                  |  yes if you want to utilize any of the AWS integrations     | N/A  | no     | The AWS secret access key of the IAM user with the STS:AssumeRole                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
@@ -710,40 +540,3 @@ The following is a list of enviroment variables supported by Sombra for its conf
 | LLM_SERVER_BACKLOG     | no       | 500              | no     |The maximum number of pending connections.                                             |
 | LLM_SERVER_WORKER_CONNECTIONS     | no       | 1000              | no     |The maximum number of simultaneous clients.                                        |
 
-## Configuring Pathfinder
-
-| Variables               | Required                                   | default | secret | Description                                                                                                                               |
-| ----------------------- | ------------------------------------------ | ------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| AUTHENTICATION_KEY_HASH | Required if REQUIRE_AUTHENTICATION is true | N/A     | yes    | Hash to check Bearer tokens against when services are authenticating to the server. See section on Generating Keys below.                 |
-| REQUIRE_AUTHENTICATION  | no                                         | N/A     | yes    | Whether to require services to authenticate to Pathfinder. May not be necessary if all services using Pathfinder are on the same network. |
-| OPEN_AI_API_KEY         | yes                                        | N/A     | yes    | API key for OpenAI, obtained from [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys).           |
-| PORT                    | no                                         | 3030    | no     | The internal port to run Pathfinder on.                                                                                                   |
-
-### Generating AUTHENTICATION_KEY_HASH & AUTHENTICATION_KEY for Pathfinder
-
-Run the following to generate keys for Pathfinder
-
-```bash
-INTERNAL_KEY_BIN=$(openssl rand 32)
-AUTHENTICATION_KEY=$(echo -n "$INTERNAL_KEY_BIN" | base64)
-AUTHENTICATION_KEY_HASH=$(echo -n "$INTERNAL_KEY_BIN" | openssl dgst -binary -sha256 | openssl base64)
-Cyan='\033[0;36m' # Cyan color
-NC='\033[0m' # No Color
-echo "\n- Set in Pathfinder environment:\n  AUTHENTICATION_KEY_HASH: $Cyan$AUTHENTICATION_KEY_HASH$NC"
-echo "\n- Clients should pass this Bearer token in the HTTP authorization headers:\n  PATHFINDER_BEARER_TOKEN: $Cyan$AUTHENTICATION_KEY$NC\n\n  - For example:\n    { authorization: Bearer $AUTHENTICATION_KEY }"
-```
-
-### Configure a service to use Pathfinder
-
-For any call to OpenAI, configure your service to use Pathfinder instead by using `<your.pathfinder.domain>/api/open-ai` instead of the OpenAI base host. Individual endpoints can be appended to this base. For example, `https://api.openai.com/v1/chat/completions` becomes `<your.pathfinder.domain>/api/open-ai/v1/chat/completions`.
-
-If you set `REQUIRE_AUTHENTICATION` to `true` in your env file, you will also need to add an Authentication header to any API calls to Pathfinder. For example,
-
-```javascript
-{
-  headers: {
-    // AUTHENTICATION_KEY is the key output in the Generating Keys section above
-    Authentication: 'Bearer <AUTHENTICATION_KEY>';
-  }
-}
-```
