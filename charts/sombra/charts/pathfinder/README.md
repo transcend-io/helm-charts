@@ -45,8 +45,6 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
 
 pathfinder:
   enabled: true

@@ -58,8 +58,6 @@ Official Helm charts to deploy Sombra and related services into a Kubernetes clu
         value: '<INTERNAL_KEY_HASH>'
       - name: JWT_ECDSA_KEY
         value: '<JWT_ECDSA_KEY>'
-      - name: INTERNAL_KEY
-        value: '<INTERNAL_KEY>'
     ```
 
    **Note:** This example of `values.yaml` assumes you have deployed (A) a working Kubernetes cluster, and (B) an `alb` AWS application load balancer ingress controller.
@@ -137,8 +135,6 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
 ```
 
 ### Deploying Sombra with TLS
@@ -190,15 +186,14 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
   # You must include certificate information for Sombra's server.
-  - name: SOMBRA_TLS_KEY
-    value: <SOMBRA_TLS_KEY>
-  - name: SOMBRA_TLS_KEY_PASSPHRASE
-    value: <SOMBRA_TLS_KEY_PASSPHRASE>
   - name: SOMBRA_TLS_CERT
     value: <SOMBRA_TLS_CERT>
+  - name: SOMBRA_TLS_KEY
+    value: <SOMBRA_TLS_KEY>
+  # An optional passphrase associated with your TLS private key. If you set a passphrase when you created your key and certificate, you must provide it here.
+  - name: SOMBRA_TLS_KEY_PASSPHRASE
+    value: <SOMBRA_TLS_KEY_PASSPHRASE>
 ```
 
 ### Deploying Sombra and the LLM Classifier
@@ -250,8 +245,6 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
 
 llm-classifier:
   enabled: true
@@ -306,8 +299,6 @@ envs_as_secret:
     value: '<INTERNAL_KEY_HASH>'
   - name: JWT_ECDSA_KEY
     value: '<JWT_ECDSA_KEY>'
-  - name: INTERNAL_KEY
-    value: '<INTERNAL_KEY>'
 
 llm-classifier:
   enabled: true
@@ -392,8 +383,6 @@ envs_as_secret:
     value: <INTERNAL_KEY_HASH>
   - name: JWT_ECDSA_KEY
     value: <JWT_ECDSA_KEY>
-  - name: INTERNAL_KEY
-    value: <INTERNAL_KEY>
 
 livenessProbe:
   httpGet:
