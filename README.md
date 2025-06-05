@@ -410,7 +410,9 @@ readinessProbe:
 
 ### Using the Direct Connection method
 
-To connect Sombra with Transcend, there are [two connection methods: Reverse Tunnel and Direct Connection](https://docs.transcend.io/docs/articles/sombra/deploying/customizing-sombra/networking#connecting-to-transcend). By default, Sombra uses a Reverse Tunnel, which we recommend. You can optionally configure Sombra to use the Direct Connection method by enabling `transcend_ingress` in `values.yaml`.
+To connect Sombra with Transcend, there are [two connection methods: Reverse Tunnel and Direct Connection](https://docs.transcend.io/docs/articles/sombra/deploying/customizing-sombra/networking#connecting-to-transcend). By default, Sombra uses a Reverse Tunnel, which we recommend. 
+
+You can optionally configure Sombra to use the Direct Connection method by enabling `transcend_ingress` in `values.yaml`:
 
 ```yaml
 transcend_ingress:
@@ -422,6 +424,30 @@ transcend_ingress:
     alb.ingress.kubernetes.io/healthcheck-port: '5042'
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5042}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
+    alb.ingress.kubernetes.io/tags: env=dev
+    alb.ingress.kubernetes.io/target-type: ip
+  hosts:
+    - host: <SOMBRA_TRANSCEND_INGRESS_DOMAIN>
+      paths:
+        - path: /
+          pathType: Prefix
+```
+
+Or with TLS:
+
+```yaml
+transcend_ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: <CERT_ARN>
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-port: '5041'
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 5041}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/subnets: <VPC_PUBLIC_SUBNET>
     alb.ingress.kubernetes.io/tags: env=dev
