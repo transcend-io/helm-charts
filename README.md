@@ -203,7 +203,7 @@ envs_as_secret:
 
 ### Deploying Sombra and the LLM Classifier
 
-This example deploys Sombra with an accompanying LLM Classifier. The LLM Classifer requires an Nvidia GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
+This example deploys Sombra with an accompanying LLM Classifier. The LLM Classifer requires an NVIDIA GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
 
 ```yaml
 imageCredentials:
@@ -259,7 +259,7 @@ llm-classifier:
 
 ### Deploying the LLM Classifier with TLS enabled
 
-This example deploys LLM Classifier with TLS enabled to keep internal communication with sombra encrypted. The LLM Classifer requires an Nvidia GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
+This example deploys LLM Classifier with TLS enabled to keep internal communication with sombra encrypted. The LLM Classifer requires an NVIDIA GPU to run, so please make sure your cluster supports `nvidia.com/gpu` as a resource.
 
 ```yaml
 imageCredentials:
