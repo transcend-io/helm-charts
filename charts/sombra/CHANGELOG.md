@@ -27,6 +27,7 @@
 * Repo structure change
 
 ## 0.6.0
+
 * Allow for more advanced Sombra configurations to be deployed.
 * Allow for external metrics to be used with the Sombra HPA.
 * Allow for Datadog `DD_SERVICE_NAME` environment variable to be customizable.
@@ -34,7 +35,13 @@
 * Fix typos.
 
 ## 0.6.1
+
 * Fix the issue with the `isMultiTenant` parameter by converting it to a string before using it.
 
 ## 0.6.2
+
 * Fix issue with external metrics resolution for Sombras Horizontal Pod Autoscaler.
+
+## 0.6.3
+
+* Fixed a bug with the `secrets.yaml` template, which was causing this error during `helm install`: "Secret in version "v1" cannot be handled as a Secret: json: cannot unmarshal string into Go struct field Secret.data of type map[string][]uint8"
