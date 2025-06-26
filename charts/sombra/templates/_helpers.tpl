@@ -54,9 +54,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "sombra-chart.serviceAccountName" -}}
+{{- if .Values.serviceAccount }}
 {{- if .Values.serviceAccount.create }}
 {{- default (include "sombra-chart.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- else }}
+{{- "default" }}
 {{- end }}
 {{- end }}

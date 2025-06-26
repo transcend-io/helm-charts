@@ -49,7 +49,7 @@
 ## 0.6.4
 
 * Added support for specifying an optional service account name in the chart's values
-* Added serviceAccount configuration section with create, automount, annotations, and name options
+* Added optional serviceAccount configuration section (commented out by default)
 * Created serviceaccount.yaml template for conditional service account creation
-* Updated deployment to use the specified service account
-* **BREAKING CHANGE**: Default `serviceAccount.create` to `false` - users must specify existing service account names
+* Updated deployment to conditionally use the specified service account
+* **Non-breaking change**: Service account functionality is completely opt-in and disabled by default
