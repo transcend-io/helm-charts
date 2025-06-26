@@ -52,3 +52,4 @@
 * Added serviceAccount configuration section with create, automount, annotations, and name options
 * Created serviceaccount.yaml template for conditional service account creation
 * Updated deployment to use the specified service account
+* **BREAKING CHANGE**: Default `serviceAccount.create` to `false` - users must specify existing service account names
