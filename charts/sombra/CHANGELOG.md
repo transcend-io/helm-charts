@@ -45,3 +45,11 @@
 ## 0.6.3
 
 * Fixed a bug with the `secrets.yaml` template, which was causing this error during `helm install`: "Secret in version "v1" cannot be handled as a Secret: json: cannot unmarshal string into Go struct field Secret.data of type map[string][]uint8"
+
+## 0.6.4
+
+* Added support for specifying an optional service account name in the chart's values
+* Added optional serviceAccount configuration section (commented out by default)
+* Created serviceaccount.yaml template for conditional service account creation
+* Updated deployment to conditionally use the specified service account
+* **Non-breaking change**: Service account functionality is completely opt-in and disabled by default

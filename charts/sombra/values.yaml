@@ -38,6 +38,20 @@ nameOverride: ""
 # Override the full qualified app name
 fullnameOverride: ""
 
+# Service account configuration (optional)
+# Uncomment and configure this section if you want to use a custom service account
+# If not specified, no serviceAccountName will be set in the deployment (default K8s behavior)
+# serviceAccount:
+#   # Specifies whether a service account should be created
+#   create: false
+#   # Automatically mount a ServiceAccount's API credentials?
+#   automount: true
+#   # Annotations to add to the service account
+#   annotations: {}
+#   # The name of the service account to use.
+#   # If not set and create is true, a name is generated using the fullname template
+#   name: ""
+
 # Define annotations for the Sombra pod
 podAnnotations: {}
 # Define labels for the Sombra pod
