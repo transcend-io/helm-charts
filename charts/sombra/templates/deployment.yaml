@@ -38,6 +38,10 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.envFrom }}
+          envFrom:
+{{- toYaml .Values.envFrom | nindent 12 }}
+          {{- end }}
           env:
             {{- if gt $envs_as_secret_len 0  -}}
             {{- range $name, $value := .Values.envs_as_secret }}
