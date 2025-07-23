@@ -141,8 +141,6 @@ transcend_ingress:
 # Configure the container service with the minimum set of environment variables
 # @see https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra#3.-configure-the-container-service-with-the-minimum-set-of-environment-variables
 
-envFrom: []
-
 # These environment variables are saved as secret
 envs_as_secret:
   - name: JWT_ECDSA_KEY
@@ -159,6 +157,8 @@ envs:
     value: 'transcend,session'
   - name: LLM_CLASSIFIER_URL
     value: http://<RELEASE_NAME>-llm-classifier.transcend.svc:6081
+
+envFrom: []
 
 # Set to true when deploying multiple Sombra gateways
 isMultiTenant: false

@@ -1,15 +1,15 @@
 apiVersion: v2
 name: sombra
-description: A Helm chart for deploying sombra and its dependent services in Kubernetes
+description: A Helm chart to deploy Sombra and its dependent services in a Kubernetes cluster
 type: application
-version: 0.6.4
+version: 0.6.5
 maintainers:
 - name: Transcend
   email: dev@transcend.io
 dependencies:
 - name: llm-classifier
   condition: llm-classifier.enabled
-  version: "0.2.0"
+  version: "0.2.1"
 - name: pathfinder
   condition: pathfinder.enabled
-  version: "0.2.0"
+  version: "0.2.1"
