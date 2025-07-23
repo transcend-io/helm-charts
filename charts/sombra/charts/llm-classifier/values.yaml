@@ -44,6 +44,8 @@ envs:
   # - name: LLM_KEY_PATH
   #   value: "/etc/llm-classifier/ssl/llm-classifier.key"
 
+envFrom: []
+
 # Define resources as per required throughput
 # Make sure cluster support `nvidia.com/gpu`
 resources:

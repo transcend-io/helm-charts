@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.envFrom }}
           envFrom:
-{{- toYaml .Values.envFrom | nindent 12 }}
+            {{- toYaml .Values.envFrom | nindent 12 }}
           {{- end }}
           env:
             {{- if gt $envs_as_secret_len 0  -}}
