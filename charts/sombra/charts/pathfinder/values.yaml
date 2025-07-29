@@ -27,6 +27,30 @@ podAnnotations: {}
 # Define lables for sombra pod
 podLabels: {}
 
+# Security context configuration
+# Pod-level security context
+podSecurityContext: {}
+  # fsGroup: 1000
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # supplementalGroups: []
+  # seccompProfile:
+  #   type: RuntimeDefault
+
+# Container-level security context
+securityContext: {}
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # allowPrivilegeEscalation: false
+  # capabilities:
+  #   drop:
+  #     - ALL
+  # readOnlyRootFilesystem: true
+  # seccompProfile:
+  #   type: RuntimeDefault
+
 # Define Pathfinder networking
 service:
   type: ClusterIP

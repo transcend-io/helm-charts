@@ -49,13 +49,20 @@
 ## 0.6.4
 
 * Added support for specifying an optional service account name in the chart's values
-* Added optional serviceAccount configuration section (commented out by default)
-* Created serviceaccount.yaml template for conditional service account creation
-* Updated deployment to conditionally use the specified service account
-* **Non-breaking change**: Service account functionality is completely opt-in and disabled by default
+  * Added optional serviceAccount configuration section (commented out by default)
+  * Created serviceaccount.yaml template for conditional service account creation
+  * Updated deployment to conditionally use the specified service account
+  * **Non-breaking change**: Service account functionality is completely opt-in and disabled by default
 
 ## 0.6.5
 
 * Added support for client-managed secrets via `envFrom` configuration
-* Allow loading environment variables from ConfigMaps and Secrets using the `envFrom` field
-* **Non-breaking change**: `envFrom` functionality is completely opt-in and disabled by default
+  * Allow loading environment variables from ConfigMaps and Secrets using the `envFrom` field
+  * **Non-breaking change**: `envFrom` functionality is completely opt-in and disabled by default
+
+## 0.6.6
+
+* Added support for pod-level and container-level securityContext configuration
+  * Allow users to configure security contexts for enhanced security and compliance
+  * Added `podSecurityContext` and `securityContext` options in values.yaml for all charts (sombra, llm-classifier, pathfinder)
+  * **Non-breaking change**: Security context functionality is completely opt-in and disabled by default
