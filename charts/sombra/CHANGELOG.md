@@ -66,3 +66,7 @@
   * Allow users to configure security contexts for enhanced security and compliance
   * Added `podSecurityContext` and `containerSecurityContext` options in values.yaml for all charts (sombra, llm-classifier, pathfinder)
   * **Non-breaking change**: Security context functionality is completely opt-in and disabled by default
+
+## 0.6.7
+
+* See 0.6.6. This is a re-release of 0.6.6 to test an updated chart release process.
