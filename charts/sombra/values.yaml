@@ -82,40 +82,7 @@ containerSecurityContext: {}
   #   type: RuntimeDefault
 
 ########### Sombra Architecture ###############
-# @see https://docs.transcend.io/docs/security/end-to-end-encryption/deploying-sombra
-#
-# The Sombra container runs two servers: sombra-customer-ingress
-# and sombra-transcend-ingress. Typically, each server is mapped to its
-# own URL and load balancer. It is also possible to deploy a single URL used for
-# both servers by mapping both servers to the same load balancer
-# with a single URL, but different ports.
-
-# It is common to terminate TLS at the load balancer, and
-# have the communication between the load balancer and Sombra servers happen
-# over HTTP. Sombra supports TLS connection between the load balancer and server, however, you
-# will need to provide the certificate through environment variables, and you
-# should consider a process for cycling this certificate. To read more
-# about configuring TLS communication between the load balancer and servers,
-# see the TLS Certificate section below.
-#
-# sombra-customer-ingress:
-#
-# This server handles all communication that comes inbound from your
-# internal servers. Here, your customer data is encrypted before it enters
-# the Transcend cloud.
-#
-# Container HTTP Port (terminating TLS at load balancer): 5039
-# Container HTTPS Port (requires TLS Certificate): 5040
-#
-# sombra-transcend-ingress:
-#
-# This server handles all communication that comes inbound from the Transcend cloud.
-# Here, Transcend will make requests to your internal systems, the gateway will authenticate those
-# requests, route the request to the correct system, and then encrypt any sensitive or personal
-# data that is returned by that system.
-#
-# Container HTTP Port (terminating TLS at load balancer): 5042
-# Container HTTPS Port (requires TLS Certificate): 5041
+# @see https://docs.transcend.io/docs/articles/sombra/architecture
 
 # Define service and ingress for sombra-customer-ingress server
 customer_service:
