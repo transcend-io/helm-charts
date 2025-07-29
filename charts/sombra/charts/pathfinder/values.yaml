@@ -39,7 +39,7 @@ podSecurityContext: {}
   #   type: RuntimeDefault
 
 # Container-level security context
-securityContext: {}
+containerSecurityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
   # runAsGroup: 1000

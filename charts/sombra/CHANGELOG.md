@@ -62,7 +62,7 @@
 
 ## 0.6.6
 
-* Added support for pod-level and container-level securityContext configuration
+* Added support for pod-level and container-level [securityContext](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) configuration
   * Allow users to configure security contexts for enhanced security and compliance
-  * Added `podSecurityContext` and `securityContext` options in values.yaml for all charts (sombra, llm-classifier, pathfinder)
+  * Added `podSecurityContext` and `containerSecurityContext` options in values.yaml for all charts (sombra, llm-classifier, pathfinder)
   * **Non-breaking change**: Security context functionality is completely opt-in and disabled by default
