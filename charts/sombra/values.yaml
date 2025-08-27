@@ -179,6 +179,14 @@ readinessProbe:
     port: 5042
     scheme: HTTP
 
+# Host-aliases to define on the pods.
+hostAliases: []
+
+# Volumes to add to the pods.
+volumes: []
+# Volume mounts to add to the pods.
+volumeMounts: []
+
 # Enable to use horizontal pod autoscaling based off metrics
 autoscaling:
   enabled: false
