@@ -70,3 +70,7 @@
 ## 0.6.7
 
 * See 0.6.6. This is a re-release of 0.6.6 to test an updated chart release process.
+
+## 0.6.8
+
+* Added support for host-aliases, and volume mounts to the Sombra customer-ingress pods.
