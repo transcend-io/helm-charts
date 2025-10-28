@@ -2,7 +2,7 @@ name: Helm chart tests
 on:
   pull_request:
     paths:
-      - charts/sombra
+      - 'charts/sombra/**/*'
 
 jobs:
   test:
