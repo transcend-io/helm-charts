@@ -24,3 +24,6 @@
 
 # packaged files
 *.tgz
+
+# tests
+tests/
