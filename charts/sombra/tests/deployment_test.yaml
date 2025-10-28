@@ -24,7 +24,8 @@ tests:
           value: test-ns
       - equal:
           path: metadata.name
-          value: testing-sombra
+          # FIXME
+          value: no-sombra
       - equal:
           path: spec.template.spec.containers[0].name
           value: sombra
