@@ -74,3 +74,7 @@
 ## 0.6.8
 
 * Added support for host-aliases, and volume mounts to the Sombra customer-ingress pods.
+
+## 0.7.0
+
+* Added support for specifying a custom termination grace period for Sombra pods.
