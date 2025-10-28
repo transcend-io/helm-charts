@@ -1,6 +1,8 @@
 name: Helm chart tests
 on:
   pull_request:
+    paths:
+      - charts/sombra
 
 jobs:
   test:
