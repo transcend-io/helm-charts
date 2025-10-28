@@ -179,6 +179,10 @@ readinessProbe:
     port: 5042
     scheme: HTTP
 
+# The default is 30 seconds.
+# We choose a higher grace period to allow more requests to complete.
+terminationGracePeriodSeconds: 120
+
 # Host-aliases to define on the pods.
 hostAliases: []
 
