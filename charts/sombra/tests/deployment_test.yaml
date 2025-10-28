@@ -1,0 +1,98 @@
+# Docs: https://github.com/helm-unittest/helm-unittest/blob/main/DOCUMENT.md
+suite: Deployment
+templates:
+  - deployment.yaml
+release:
+  name: testing
+tests:
+  - it: should work
+    set:
+      autoscaling.enabled: false
+      namespace: test-ns
+      transcend_service.port: 6041
+      customer_service.port: 6042
+      image.tag: v7.4.7
+      datadog.serviceName: testing-sombra-service
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: metadata.namespace
+          value: test-ns
+      - equal:
+          path: metadata.name
+          value: testing-sombra
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: sombra
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 2
+      - equal:
+          path: spec.template.spec.containers[0].ports[0]
+          value:
+            name: external
+            containerPort: 6041
+            protocol: TCP
+      - equal:
+          path: spec.template.spec.containers[0].ports[1]
+          value:
+            name: internal
+            containerPort: 6042
+            protocol: TCP
+      - isSubset:
+          path: metadata.labels
+          content:
+            app.kubernetes.io/name: sombra
+            app.kubernetes.io/instance: testing
+            app.kubernetes.io/managed-by: Helm
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.transcend.io/sombra:v7.4.7
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe
+          value:
+            httpGet:
+              path: /health
+              port: 5042
+              scheme: HTTP
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe
+          value:
+            httpGet:
+              path: /health
+              port: 5042
+              scheme: HTTP
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DD_SERVICE_NAME
+            value: 'testing-sombra-service'
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ORGANIZATION_URI
+            value: 'some-org'
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: IS_MULTI
+            value: 'false'
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SOMBRA_ID
+            value: 'some-id'
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: DATA_SUBJECT_AUTHENTICATION_METHODS
+            value: 'transcend,session'
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: EMPLOYEE_AUTHENTICATION_METHODS
+            value: 'transcend,session'
