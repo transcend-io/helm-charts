@@ -2,6 +2,28 @@ apiVersion: v1
 entries:
   sombra:
   - apiVersion: v2
+    created: "2025-10-28T18:58:02.360862921Z"
+    dependencies:
+    - condition: llm-classifier.enabled
+      name: llm-classifier
+      repository: ""
+      version: 0.2.2
+    - condition: pathfinder.enabled
+      name: pathfinder
+      repository: ""
+      version: 0.2.2
+    description: A Helm chart to deploy Sombra and its dependent services in a Kubernetes
+      cluster
+    digest: dae9719a1ebefb3d81acf45f5fe70d3308063ea3fb6fdee1cdc03758f119db04
+    maintainers:
+    - email: dev@transcend.io
+      name: Transcend
+    name: sombra
+    type: application
+    urls:
+    - https://github.com/transcend-io/helm-charts/releases/download/sombra-0.7.0/sombra-0.7.0.tgz
+    version: 0.7.0
+  - apiVersion: v2
     created: "2025-08-27T21:32:33.155734974Z"
     dependencies:
     - condition: llm-classifier.enabled
@@ -193,4 +215,4 @@ entries:
     urls:
     - https://github.com/transcend-io/helm-charts/releases/download/sombra-0.5.0/sombra-0.5.0.tgz
     version: 0.5.0
-generated: "2025-08-27T21:32:33.155799496Z"
+generated: "2025-10-28T18:58:02.360916862Z"
