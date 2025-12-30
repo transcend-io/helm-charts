@@ -78,3 +78,8 @@
 ## 0.7.0
 
 * Added support for specifying a custom termination grace period for Sombra pods.
+
+## 0.8.0
+
+* Increase default memory and cpu allocation to prevent pod recycling.
+* Relax liveleness and Rediness probe to prevent pod recycling. 

@@ -160,12 +160,12 @@ datadog:
 
 # Resource requests and limits for the Sombra pod
 resources:
-   requests:
-    memory: '1000Mi'
-    cpu: '2000m'
-   limits:
-    memory: '2000Mi'
-    cpu: '3000m'
+  requests:
+    cpu: "2"
+    memory: "8Gi"
+  limits:
+    cpu: "3"
+    memory: "12Gi"
 
 # Health check configuration
 livenessProbe:
@@ -173,11 +173,19 @@ livenessProbe:
     path: /health
     port: 5042
     scheme: HTTP
+  timeoutSeconds: 30
+  failureThreshold: 6
+  successThreshold: 1
+  periodSeconds: 10
 readinessProbe:
   httpGet:
     path: /health
     port: 5042
     scheme: HTTP
+  timeoutSeconds: 10
+  failureThreshold: 3
+  successThreshold: 1
+  periodSeconds: 10
 
 # The default is 30 seconds.
 # We choose a higher grace period to allow more requests to complete.
