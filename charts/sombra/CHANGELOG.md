@@ -81,5 +81,5 @@
 
 ## 0.8.0
 
-* Increase default memory and cpu allocation to prevent pod recycling.
-* Relax liveleness and Rediness probe to prevent pod recycling. 
+* Increase default memory and cpu allocation to prevent pod termination.
+* Relax `liveleness` and `rediness` probe to prevent pod termination. 

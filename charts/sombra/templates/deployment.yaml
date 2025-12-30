@@ -69,6 +69,10 @@ spec:
                   key: {{ $value.name }}
             {{- end }}
             {{- end }}
+            {{- if and .Values.llm-classifier.enabled }}
+            - name: LLM_CLASSIFIER_URL
+              value: http://{{ include "llm-classifier.fullname" . }}.{{ .Values.namespace }}.svc:6081
+            {{- end }}
             {{- range $name, $value := .Values.envs }}
             - name: {{ $value.name }}
               value: {{ $value.value | quote }}
