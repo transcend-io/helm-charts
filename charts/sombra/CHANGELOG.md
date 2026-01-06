@@ -82,4 +82,4 @@
 ## 0.8.0
 
 * Increase default memory and cpu allocation to prevent pod termination.
-* Relax `liveleness` and `rediness` probe to prevent pod termination. 
+* Relax `liveness` and `readiness` probe to prevent pod termination. 
