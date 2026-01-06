@@ -1,4 +1,5 @@
 {{- $envs_as_secret_len := len .Values.envs_as_secret }}
+{{- $llm_classifier := index .Values "llm-classifier" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -60,6 +61,10 @@ spec:
             {{- toYaml .Values.envFrom | nindent 12 }}
           {{- end }}
           env:
+            {{- if $llm_classifier.enabled }}
+            - name: LLM_CLASSIFIER_URL
+              value:  "http://{{ $llm_classifier.fullnameOverride }}.{{ .Values.namespace }}.svc:6081"
+            {{- end }}
             {{- if gt $envs_as_secret_len 0  -}}
             {{- range $name, $value := .Values.envs_as_secret }}
             - name: {{ $value.name }}
@@ -68,10 +73,6 @@ spec:
                   name: sombra-secrets
                   key: {{ $value.name }}
             {{- end }}
-            {{- end }}
-            {{- if .Values.llm-classifier.enabled }}
-            - name: LLM_CLASSIFIER_URL
-              value: http://{{ include "llm-classifier.fullname" . }}.{{ .Values.namespace }}.svc:6081
             {{- end }}
             {{- range $name, $value := .Values.envs }}
             - name: {{ $value.name }}
