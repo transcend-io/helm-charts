@@ -63,7 +63,7 @@ spec:
           env:
             {{- if $llm_classifier.enabled }}
             - name: LLM_CLASSIFIER_URL
-              value:  "http://{{ $llm_classifier.fullnameOverride }}.{{ .Values.namespace }}.svc:6081"
+              value:  "http://{{ include "sombra-chart.fullname" . }}-llm-classifier.{{ .Values.namespace }}.svc:6081"
             {{- end }}
             {{- if gt $envs_as_secret_len 0  -}}
             {{- range $name, $value := .Values.envs_as_secret }}

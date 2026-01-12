@@ -224,8 +224,6 @@ global:
 # Data classification service using LLM model
 llm-classifier:
   enabled: false
-  # Override fullname template for the llm-classifier subchart
-  fullnameOverride: "llm-classifier"
 
 # Pathfinder is AI governance layer that gives you control and auditability on data going in and out of LLMs.
 # @see https://docs.transcend.io/docs/pathfinder
