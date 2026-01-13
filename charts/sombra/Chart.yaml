@@ -4,12 +4,15 @@ description: A Helm chart to deploy Sombra and its dependent services in a Kuber
 type: application
 version: 0.7.0
 maintainers:
-- name: Transcend
-  email: dev@transcend.io
+  - name: Transcend
+    email: dev@transcend.io
 dependencies:
-- name: llm-classifier
-  condition: llm-classifier.enabled
-  version: "0.2.2"
-- name: pathfinder
-  condition: pathfinder.enabled
-  version: "0.2.2"
+  - name: llm-classifier
+    condition: llm-classifier.enabled
+    version: "0.2.2"
+  - name: pathfinder
+    condition: pathfinder.enabled
+    version: "0.2.2"
+  - name: job-scheduler
+    condition: job-scheduler.enabled
+    version: "0.2.2"
