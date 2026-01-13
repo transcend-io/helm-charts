@@ -1,0 +1,123 @@
+# Default values for sombra-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#  Namespace in which resources will be deployed
+namespace: transcend
+#  Number of instances for Sombra's asynchronous Job Scheduler service.
+replicaCount: 1
+# Set it to `true` to deploy sombra-job-scheduler resources.
+enabled: false
+
+image:
+  # Repository to use for sombra-job-scheduler image
+  repository: docker.transcend.io/sombra-job-scheduler
+  # Define the pullPolicy for sombra-job-scheduler image
+  pullPolicy: IfNotPresent
+  # sombra-job-scheduler version to deploy
+  tag: "latest"
+
+# Override name of app
+nameOverride: ""
+# Override the full qualified app name
+fullnameOverride: ""
+
+# Define annotations for sombra-job-scheduler pod
+podAnnotations: {}
+# Define lables for sombra-job-scheduler pod
+podLabels: {}
+
+# Security context configuration
+# Pod-level security context
+podSecurityContext: {}
+  # fsGroup: 1000
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # supplementalGroups: []
+  # seccompProfile:
+  #   type: RuntimeDefault
+
+# Container-level security context
+containerSecurityContext: {}
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # allowPrivilegeEscalation: false
+  # capabilities:
+  #   drop:
+  #     - ALL
+  # readOnlyRootFilesystem: true
+  # seccompProfile:
+  #   type: RuntimeDefault
+
+# Define job-scheduler networking
+service:
+  type: ClusterIP
+  port: 6081
+
+envs:
+  - name: JOB_SCHEDULER_CONCURRENCY
+    value: "2"
+  - name: JOB_SCHEDULER_TIMEOUT
+    value: "120"
+
+envFrom: []
+
+# Define resources as per required throughput
+# Make sure cluster support `nvidia.com/gpu`
+resources:
+  limits:
+    memory: 8Gi
+    nvidia.com/gpu: "1"
+
+livenessProbe:
+  exec:
+    command: test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
+  timeoutSeconds: 30
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 10
+
+startupProbe:
+  exec:
+    command: test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
+  timeoutSeconds: 30
+  periodSeconds: 20
+  successThreshold: 1
+  failureThreshold: 10
+
+# Enable to use horizontal pod autoscaling based of metrics
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+tls:
+  enabled: false
+  cert: |-
+    -----BEGIN CERTIFICATE-----
+    <base64>
+    -----END CERTIFICATE-----
+  key: |-
+    -----BEGIN PRIVATE KEY-----
+    <base64>
+    -----END PRIVATE KEY-----
+
+volumes: []
+# - name: sombra-job-scheduler-ssl
+#   secret:
+#     secretName: sombra-job-scheduler-secrets
+
+volumeMounts: []
+#  - mountPath: "/etc/sombra-job-scheduler/ssl"
+#    name: sombra-job-scheduler-ssl
+#    readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
