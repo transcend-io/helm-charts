@@ -34,20 +34,31 @@ podSecurityContext: {}
 # Container-level security context
 containerSecurityContext: {}
 
+# These environment variables are saved as secret
+envs_as_secret:
+  - name: JWT_ECDSA_KEY
+    value: "<JWT_ECDSA_KEY>"
+
 envs:
-  - name: JOB_SCHEDULER_CONCURRENCY
-    value: "2"
-  - name: JOB_SCHEDULER_TIMEOUT
-    value: "120"
+  - name: ORGANIZATION_URI
+    value: "some-org"
+  - name: SOMBRA_ID
+    value: "some-id"
+  - name: EMPLOYEE_AUTHENTICATION_METHODS
+    value: "transcend,session"
+  - name: DATA_SUBJECT_AUTHENTICATION_METHODS
+    value: "transcend,session"
 
 envFrom: []
 
 # Define resources as per required throughput
-# Make sure cluster support `nvidia.com/gpu`
 resources:
+  requests:
+    cpu: "2"
+    memory: "8Gi"
   limits:
-    memory: 8Gi
-    nvidia.com/gpu: "1"
+    cpu: "3"
+    memory: "12Gi"
 
 livenessProbe:
   exec:
