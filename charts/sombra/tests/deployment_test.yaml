@@ -12,7 +12,7 @@ tests:
       transcend_service.port: 6041
       customer_service.port: 6042
       job-scheduler.enabled: true
-      image.tag: v7.4.8
+      image.tag: v7.444.2
       datadog.serviceName: testing-sombra-service
     asserts:
       - isKind:
@@ -52,7 +52,7 @@ tests:
             app.kubernetes.io/managed-by: Helm
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.transcend.io/sombra:v7.4.7
+          value: docker.transcend.io/sombra:v7.444.2
       - equal:
           path: spec.template.spec.containers[0].livenessProbe
           value:
@@ -60,6 +60,11 @@ tests:
               path: /health
               port: 5042
               scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
+            failureThreshold: 6
+            successThreshold: 1
+            periodSeconds: 10
       - equal:
           path: spec.template.spec.containers[0].readinessProbe
           value:
@@ -67,6 +72,11 @@ tests:
               path: /health
               port: 5042
               scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            periodSeconds: 10
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -97,3 +107,11 @@ tests:
           content:
             name: EMPLOYEE_AUTHENTICATION_METHODS
             value: "transcend,session"
+      - contains:
+          path: spec.template.spec.job-scheduler.containers[0].readinessProbe
+          content:
+            command: test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
+            timeoutSeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
