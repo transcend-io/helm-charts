@@ -16,3 +16,12 @@ $ helm install sombra transcend/sombra --values=./values.yaml
 ```
 
 Please see the options supported in the `values.yaml` file. These are also fully documented directly on the [Sombra deployment guide](https://docs.transcend.io/docs/articles/sombra/deploying/deployment-options/helm).
+
+## Test
+
+To test these charts:
+
+```console
+helm unittest charts/sombra
+helm unittest charts/sombra/charts/job-scheduler
+```
