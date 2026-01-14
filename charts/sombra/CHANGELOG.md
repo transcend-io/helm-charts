@@ -78,3 +78,8 @@
 ## 0.7.0
 
 * Added support for specifying a custom termination grace period for Sombra pods.
+
+## 0.8.0
+
+* Increase default memory and cpu allocation to prevent pod termination.
+* Relax `liveness` and `readiness` probe to prevent pod termination. 
