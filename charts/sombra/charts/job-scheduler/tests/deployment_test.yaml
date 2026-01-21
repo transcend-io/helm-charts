@@ -15,20 +15,18 @@ tests:
       - isKind:
           of: Deployment
         template: deployment.yaml
-      - contains:
-          path: spec.template.spec.containers
-          content:
-            name: job-scheduler
-            readinessProbe:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
-              timeoutSeconds: 30
-              periodSeconds: 10
-              successThreshold: 1
-              failureThreshold: 10
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe
+          value:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
+            timeoutSeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
       - contains:
           path: spec.template.spec.containers[0].env
           content:
