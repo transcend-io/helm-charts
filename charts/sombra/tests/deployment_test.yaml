@@ -113,25 +113,3 @@ tests:
           content:
             name: LLM_CLASSIFIER_URL
             value: "http://testing-llm-classifier.test-ns.svc:6081"
-  # - it: should render job-scheduler with readinessProbe
-  #   set:
-  #     job-scheduler.enabled: true
-  #   asserts:
-  #     - isKind:
-  #         of: Deployment
-  #       template: charts/job-scheduler/templates/deployment.yaml
-  #     - contains:
-  #         path: spec.template.spec.containers
-  #         content:
-  #           name: job-scheduler
-  #           readinessProbe:
-  #             exec:
-  #               command:
-  #                 - /bin/sh
-  #                 - -c
-  #                 - test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
-  #             timeoutSeconds: 30
-  #             periodSeconds: 10
-  #             successThreshold: 1
-  #             failureThreshold: 10
-  #       template: charts/job-scheduler/templates/deployment.yaml
