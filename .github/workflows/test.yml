@@ -2,7 +2,7 @@ name: Helm chart tests
 on:
   pull_request:
     paths:
-      - 'charts/sombra/**/*'
+      - "charts/sombra/**/*"
 
 jobs:
   test:
@@ -24,7 +24,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Install Helm unittest plugin
-        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --verify=false
 
       - name: Run Sombra chart tests
         shell: bash
