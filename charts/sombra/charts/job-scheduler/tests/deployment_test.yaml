@@ -8,6 +8,9 @@ tests:
   - it: should render job-scheduler with readinessProbe
     set:
       enabled: true
+      global:
+        imagePullSecrets:
+          - name: transcend-registry
     asserts:
       - isKind:
           of: Deployment

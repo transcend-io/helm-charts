@@ -48,10 +48,6 @@ spec:
             - name: {{ $value.name }}
               value: {{ $value.value | quote }}
             {{- end }}
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           startupProbe:
