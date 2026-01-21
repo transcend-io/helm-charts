@@ -26,7 +26,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Install Helm unittest plugin
-        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --verify=false
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git
 
       - name: Run Sombra chart tests
         shell: bash
