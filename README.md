@@ -19,6 +19,9 @@ Please see the options supported in the `values.yaml` file. These are also fully
 
 ## Test
 
-```
-helm unittest -f 'charts/sombra/tests/deployment_test.yaml' charts/sombra
+To test these charts:
+
+```console
+helm unittest charts/sombra
+helm unittest charts/sombra/charts/job-scheduler
 ```

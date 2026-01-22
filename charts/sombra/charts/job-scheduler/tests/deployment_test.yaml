@@ -1,0 +1,39 @@
+# Docs: https://github.com/helm-unittest/helm-unittest/blob/main/DOCUMENT.md
+suite: Deployment
+templates:
+  - deployment.yaml
+release:
+  name: testing
+tests:
+  - it: should render job-scheduler with readinessProbe
+    set:
+      enabled: true
+      global:
+        imagePullSecrets:
+          - name: transcend-registry
+    asserts:
+      - isKind:
+          of: Deployment
+        template: deployment.yaml
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe
+          value:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
+            timeoutSeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SOMBRA_ID
+            value: "some-id"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SOMBRA_JOB_QUEUE_URL
+            value: "https://sombra-job-queue.transcend.io/"

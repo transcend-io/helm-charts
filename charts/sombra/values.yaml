@@ -135,17 +135,17 @@ transcend_ingress:
 # These environment variables are saved as secret
 envs_as_secret:
   - name: JWT_ECDSA_KEY
-    value: '<JWT_ECDSA_KEY>'
+    value: "<JWT_ECDSA_KEY>"
 
 envs:
   - name: ORGANIZATION_URI
-    value: 'some-org'
+    value: "some-org"
   - name: SOMBRA_ID
-    value: 'some-id'
+    value: "some-id"
   - name: EMPLOYEE_AUTHENTICATION_METHODS
-    value: 'transcend,session'
+    value: "transcend,session"
   - name: DATA_SUBJECT_AUTHENTICATION_METHODS
-    value: 'transcend,session'
+    value: "transcend,session"
 
 envFrom: []
 
@@ -154,7 +154,7 @@ isMultiTenant: false
 
 # Configuration for log forwarding to Transcend
 datadog:
-  serviceName: 'customer_hosted_sombra'
+  serviceName: "customer_hosted_sombra"
 
 # Resource requests and limits for the Sombra pod
 resources:
@@ -219,7 +219,7 @@ affinity: {}
 # Global configuration
 global:
   imagePullSecrets:
-  - name: transcend-registry
+    - name: transcend-registry
 
 # Data classification service using LLM model
 llm-classifier:
@@ -228,4 +228,8 @@ llm-classifier:
 # Pathfinder is AI governance layer that gives you control and auditability on data going in and out of LLMs.
 # @see https://docs.transcend.io/docs/pathfinder
 pathfinder:
+  enabled: false
+
+# Asynchronous Sombra Job Scheduler
+job-scheduler:
   enabled: false

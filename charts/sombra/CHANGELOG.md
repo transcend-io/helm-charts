@@ -83,3 +83,7 @@
 
 * Increase default memory and cpu allocation to prevent pod termination.
 * Relax `liveness` and `readiness` probe to prevent pod termination. 
+
+## 0.9.0
+
+* Add support for Asynchronous Sombra Job Scheduler

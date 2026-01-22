@@ -1,0 +1,106 @@
+# Default values for sombra-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#  Namespace in which resources will be deployed
+namespace: transcend
+#  Number of instances for Sombra's asynchronous Job Scheduler service.
+replicaCount: 1
+# Set it to `true` to deploy sombra-job-scheduler resources.
+enabled: false
+
+image:
+  # Repository to use for sombra-job-scheduler image
+  repository: docker.transcend.io/sombra-job-scheduler
+  # Define the pullPolicy for sombra-job-scheduler image
+  pullPolicy: IfNotPresent
+  # sombra-job-scheduler version to deploy
+  tag: "latest"
+
+# Override name of app
+nameOverride: ""
+# Override the full qualified app name
+fullnameOverride: ""
+
+# Define annotations for sombra-job-scheduler pod
+podAnnotations: {}
+# Define lables for sombra-job-scheduler pod
+podLabels: {}
+
+# Security context configuration
+# Pod-level security context
+podSecurityContext: {}
+
+# Container-level security context
+containerSecurityContext: {}
+
+# These environment variables are saved as secret
+envs_as_secret:
+  - name: JWT_ECDSA_KEY
+    value: "<JWT_ECDSA_KEY>"
+
+envs:
+  - name: ORGANIZATION_URI
+    value: "some-org"
+  - name: SOMBRA_ID
+    value: "some-id"
+  - name: EMPLOYEE_AUTHENTICATION_METHODS
+    value: "transcend,session"
+  - name: DATA_SUBJECT_AUTHENTICATION_METHODS
+    value: "transcend,session"
+  - name: ENABLE_JOB_SCHEDULER
+    value: "true"
+  - name: SOMBRA_JOB_QUEUE_URL
+    value: "https://sombra-job-queue.transcend.io/" # region dependent
+  - name: JOB_POLLING_INTERVAL
+    value: 5000 # in milliseconds
+
+envFrom: []
+
+# Define resources as per required throughput
+resources:
+  requests:
+    cpu: "2"
+    memory: "8Gi"
+  limits:
+    cpu: "3"
+    memory: "12Gi"
+
+livenessProbe:
+  exec:
+    # This tests to see whether the file /tmp/sombra-job-scheduler-alive exists (test -f)
+    # and if it is less than a minute old find ... -mmin +1 ....
+    # Every time sombra-job-scheduler executes it's loop to pollSombraJobs
+    # it touches /tmp/sombra-job-scheduler-alive. This happens every pollingInterval
+    # (which defaults to 20 seconds). Therefore, if /tmp/sombra-job-scheduler-alive is missing
+    # or hasn't been updated in over a minute, it means pollSombraJobs has not been running.
+    command:
+      - /bin/sh
+      - -c
+      - test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
+  timeoutSeconds: 30
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 10
+
+startupProbe:
+  exec:
+    # See livenessProbe above for explanation of this command
+    command:
+      - /bin/sh
+      - -c
+      - test -f /tmp/sombra-job-scheduler-alive && find /tmp/sombra-job-scheduler-alive -mmin +1 -print -quit 2>/dev/null | grep -q .
+  timeoutSeconds: 30
+  periodSeconds: 20
+  successThreshold: 1
+  failureThreshold: 10
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

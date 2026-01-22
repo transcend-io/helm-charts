@@ -2,7 +2,7 @@ name: Helm chart tests
 on:
   pull_request:
     paths:
-      - 'charts/sombra/**/*'
+      - "charts/sombra/**/*"
 
 jobs:
   test:
@@ -20,6 +20,8 @@ jobs:
 
       - name: Set up Helm
         uses: azure/setup-helm@v4
+        with:
+          version: v3.19.0
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -31,3 +33,4 @@ jobs:
         run: |
           cd charts/ ;
           helm unittest sombra ;
+          helm unittest sombra/charts/job-scheduler ;
