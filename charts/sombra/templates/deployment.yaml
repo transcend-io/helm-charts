@@ -1,6 +1,5 @@
 {{- $envs_as_secret_len := len .Values.envs_as_secret }}
 {{- $llm_classifier := index .Values "llm-classifier" -}}
-{{- $job_scheduler := index .Values "job-scheduler" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

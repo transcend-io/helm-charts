@@ -51,7 +51,7 @@ envs:
   - name: ENABLE_JOB_SCHEDULER
     value: "true"
   - name: SOMBRA_JOB_QUEUE_URL
-    value: "https://sombra-job-queue.transcend.io/" # FIXME - region dependent
+    value: "https://sombra-job-queue.transcend.io/" # region dependent
   - name: JOB_POLLING_INTERVAL
     value: 5000 # in milliseconds
 
@@ -96,14 +96,8 @@ startupProbe:
   failureThreshold: 10
 
 volumes: []
-# - name: sombra-job-scheduler-ssl
-#   secret:
-#     secretName: sombra-job-scheduler-secrets
 
 volumeMounts: []
-#  - mountPath: "/etc/sombra-job-scheduler/ssl"
-#    name: sombra-job-scheduler-ssl
-#    readOnly: true
 
 nodeSelector: {}
 
