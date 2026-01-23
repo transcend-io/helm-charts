@@ -23,5 +23,4 @@ To test these charts:
 
 ```console
 helm unittest charts/sombra
-helm unittest charts/sombra/charts/sombra-job-scheduler
 ```
