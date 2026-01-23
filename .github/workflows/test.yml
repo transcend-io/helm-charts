@@ -33,4 +33,4 @@ jobs:
         run: |
           cd charts/ ;
           helm unittest sombra ;
-          helm unittest sombra/charts/job-scheduler ;
+          helm unittest sombra/charts/sombra-job-scheduler ;

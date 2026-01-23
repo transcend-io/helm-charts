@@ -5,7 +5,7 @@ templates:
 release:
   name: testing
 tests:
-  - it: should render job-scheduler with readinessProbe
+  - it: should render sombra-job-scheduler with readinessProbe
     set:
       enabled: true
       global:
