@@ -28,6 +28,9 @@ jobs:
       - name: Install Helm unittest plugin
         run: helm plugin install https://github.com/helm-unittest/helm-unittest.git
 
+      - name: Lint chart
+        run: helm lint charts/sombra
+
       - name: Run Sombra chart tests
         shell: bash
         run: |
