@@ -86,4 +86,4 @@
 
 ## 0.9.0
 
-* Add support for Asynchronous Sombra Job Scheduler
+* Added support for Asynchronous Sombra Job Scheduler.
