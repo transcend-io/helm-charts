@@ -9,10 +9,13 @@ maintainers:
 dependencies:
   - name: llm-classifier
     condition: llm-classifier.enabled
+    repository: "file://charts/llm-classifier"
     version: "0.2.2"
   - name: pathfinder
     condition: pathfinder.enabled
+    repository: "file://charts/pathfinder"
     version: "0.2.2"
   - name: job-scheduler
     condition: job-scheduler.enabled
+    repository: "file://charts/job-scheduler"
     version: "0.1.0"

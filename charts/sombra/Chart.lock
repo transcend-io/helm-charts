@@ -1,12 +1,12 @@
 dependencies:
-  - name: llm-classifier
-    repository: ""
-    version: 0.2.2
-  - name: pathfinder
-    repository: ""
-    version: 0.2.2
-  - name: job-scheduler
-    repository: ""
-    version: 0.1.0
-digest: sha256:ade5c8e02d792909cccdb79691a8ddeb3e8bf51a10345e73cde23176f6319dc1
-generated: "2025-07-29T14:10:12.465351-04:00"
+- name: llm-classifier
+  repository: file://charts/llm-classifier
+  version: 0.2.2
+- name: pathfinder
+  repository: file://charts/pathfinder
+  version: 0.2.2
+- name: job-scheduler
+  repository: file://charts/job-scheduler
+  version: 0.1.0
+digest: sha256:386a2817a72ffd77ecd9cb2d7f86905592166dcef1025bd80275d0d7afa44940
+generated: "2026-01-23T19:54:02.149848777Z"
