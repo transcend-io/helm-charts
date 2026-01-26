@@ -13,6 +13,6 @@ dependencies:
   - name: pathfinder
     condition: pathfinder.enabled
     version: "0.2.2"
-  - name: job-scheduler
-    condition: job-scheduler.enabled
+  - name: sombra-job-scheduler
+    condition: sombra-job-scheduler.enabled
     version: "0.1.0"

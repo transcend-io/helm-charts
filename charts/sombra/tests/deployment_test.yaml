@@ -12,7 +12,7 @@ tests:
       transcend_service.port: 6041
       customer_service.port: 6042
       llm-classifier.enabled: true
-      job-scheduler.enabled: true
+      sombra-job-scheduler.enabled: true
       image.tag: v7.444.2
       datadog.serviceName: testing-sombra-service
     asserts:
