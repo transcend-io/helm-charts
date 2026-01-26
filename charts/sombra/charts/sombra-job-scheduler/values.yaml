@@ -34,10 +34,6 @@ podSecurityContext: {}
 # Container-level security context
 containerSecurityContext: {}
 
-# Define Sombra Job Scheduler networking
-service:
-  type: ClusterIP
-
 # These environment variables are saved as secret
 envs_as_secret:
   - name: JWT_ECDSA_KEY

@@ -7,7 +7,8 @@ metadata:
   labels:
     {{- include "sombra-job-scheduler.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
+  clusterIP: None
   selector:
     {{- include "sombra-job-scheduler.selectorLabels" . | nindent 4 }}
 {{- end }}
