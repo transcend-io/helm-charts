@@ -69,7 +69,7 @@ resources:
 livenessProbe:
   exec:
     # This tests to see whether the file /tmp/sombra-job-scheduler-alive exists (test -f)
-    # and if it is less than a minute old find ... -mmin +1 ....
+    # and if it was modified within the last minute: `find ... -mmin 1 ....`
     # Every time sombra-job-scheduler executes it's loop to pollSombraJobs
     # it touches /tmp/sombra-job-scheduler-alive. This happens every pollingInterval
     # (which defaults to 20 seconds). Therefore, if /tmp/sombra-job-scheduler-alive is missing
