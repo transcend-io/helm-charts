@@ -113,3 +113,78 @@ tests:
           content:
             name: LLM_CLASSIFIER_URL
             value: "http://testing-llm-classifier.test-ns.svc:6081"
+
+  - it: should render fieldRef env vars from envs_field_ref
+    set:
+      namespace: test-ns
+      envs_field_ref:
+        - name: POD_NAME
+          fieldPath: metadata.name
+        - name: POD_IP
+          fieldPath: status.podIP
+        - name: NODE_NAME
+          fieldPath: spec.nodeName
+    asserts:
+      - isKind:
+          of: Deployment
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+
+  - it: should not render fieldRef env vars when envs_field_ref is empty
+    set:
+      namespace: test-ns
+      envs_field_ref: []
+    asserts:
+      - isKind:
+          of: Deployment
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+
+  - it: should render both regular envs and fieldRef envs together
+    set:
+      namespace: test-ns
+      envs:
+        - name: ORGANIZATION_URI
+          value: "test-org"
+      envs_field_ref:
+        - name: POD_NAME
+          fieldPath: metadata.name
+    asserts:
+      - isKind:
+          of: Deployment
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ORGANIZATION_URI
+            value: "test-org"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name

@@ -78,6 +78,12 @@ spec:
             - name: {{ $value.name }}
               value: {{ $value.value | quote }}
             {{- end }}
+            {{- range $name, $value := .Values.envs_field_ref }}
+            - name: {{ $value.name }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{ $value.fieldPath }}
+            {{- end }}
             - name: IS_MULTI
               value: {{ .Values.isMultiTenant | quote }}
             - name: DD_SERVICE_NAME
