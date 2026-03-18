@@ -55,6 +55,12 @@ spec:
             - name: {{ $value.name }}
               value: {{ $value.value | quote }}
             {{- end }}
+            {{- range $name, $value := .Values.envs_field_ref }}
+            - name: {{ $value.name }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: {{ $value.fieldPath }}
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           startupProbe:

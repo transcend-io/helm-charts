@@ -87,3 +87,8 @@
 ## 0.9.0
 
 * Added support for Asynchronous Sombra Job Scheduler.
+
+## 0.10.0
+
+* Added support for Kubernetes Downward API `fieldRef` environment variables via `envs_field_ref`.
+  * Supported in both the main Sombra chart and the sombra-job-scheduler subchart.

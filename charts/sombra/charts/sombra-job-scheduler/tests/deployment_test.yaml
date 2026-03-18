@@ -37,3 +37,61 @@ tests:
           content:
             name: SOMBRA_JOB_QUEUE_URL
             value: "https://sombra-job-queue.transcend.io/"
+
+  - it: should render fieldRef env vars from envs_field_ref
+    set:
+      enabled: true
+      global:
+        imagePullSecrets:
+          - name: transcend-registry
+      envs_field_ref:
+        - name: POD_NAME
+          fieldPath: metadata.name
+        - name: POD_IP
+          fieldPath: status.podIP
+        - name: NODE_NAME
+          fieldPath: spec.nodeName
+    asserts:
+      - isKind:
+          of: Deployment
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+
+  - it: should not render fieldRef env vars when envs_field_ref is empty
+    set:
+      enabled: true
+      global:
+        imagePullSecrets:
+          - name: transcend-registry
+      envs_field_ref: []
+    asserts:
+      - isKind:
+          of: Deployment
+        template: deployment.yaml
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name

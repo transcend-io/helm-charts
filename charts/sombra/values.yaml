@@ -147,6 +147,19 @@ envs:
   - name: DATA_SUBJECT_AUTHENTICATION_METHODS
     value: "transcend,session"
 
+# Environment variables populated via the Downward API (fieldRef).
+# Exposes pod and node metadata as environment variables.
+# @see https://kubernetes.io/docs/concepts/workloads/pods/downward-api/
+# Example:
+# envs_field_ref:
+#   - name: POD_NAME
+#     fieldPath: metadata.name
+#   - name: POD_IP
+#     fieldPath: status.podIP
+#   - name: NODE_NAME
+#     fieldPath: spec.nodeName
+envs_field_ref: []
+
 envFrom: []
 
 # Set to true when deploying multiple Sombra gateways
