@@ -1,0 +1,42 @@
+name: Check Chart.lock
+on:
+  pull_request:
+    paths:
+      - "charts/sombra/**/*"
+
+jobs:
+  check-chart-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.19.0
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Verify Chart.lock is up to date
+        run: |
+          helm dependency update charts/sombra
+          if ! git diff --quiet; then
+            echo ""
+            echo "============================================================"
+            echo "ERROR: Chart.lock is out of date!"
+            echo "============================================================"
+            echo ""
+            echo "The following files have changed after running 'helm dependency update':"
+            echo ""
+            git diff --name-only
+            echo ""
+            echo "To fix this, run the following commands locally and commit the result:"
+            echo ""
+            echo "  helm dependency update charts/sombra"
+            echo "  git add charts/sombra/Chart.lock"
+            echo "  git commit -m 'Update Chart.lock'"
+            echo ""
+            echo "============================================================"
+            exit 1
+          fi

@@ -7,6 +7,6 @@ dependencies:
   version: 0.2.2
 - name: sombra-job-scheduler
   repository: ""
-  version: 0.1.3
-digest: sha256:dab38d516e78868bf4677a3550cc5c200d39ea72855ec3ce116b34b3594fde63
-generated: "2026-01-29T17:37:17.925068081Z"
+  version: 0.1.4
+digest: sha256:a0b711e5cf90fc8de02464661bc8bfef2325b8924150697519fa43207f61db5e
+generated: "2026-03-17T21:05:53.091638-07:00"
