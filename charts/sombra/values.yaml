@@ -199,6 +199,19 @@ readinessProbe:
   failureThreshold: 3
   successThreshold: 1
   periodSeconds: 10
+# Startup probe gives the container additional time to come up before the
+# liveness and readiness probes begin running. Set `startupProbe: null` to
+# disable it entirely.
+startupProbe:
+  httpGet:
+    path: /health
+    port: 5042
+    scheme: HTTP
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  failureThreshold: 30
+  successThreshold: 1
+  periodSeconds: 10
 
 # The default is 30 seconds.
 # We choose a higher grace period to allow more requests to complete.

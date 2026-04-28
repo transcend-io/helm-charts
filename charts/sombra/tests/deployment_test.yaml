@@ -78,6 +78,18 @@ tests:
             failureThreshold: 3
             successThreshold: 1
             periodSeconds: 10
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe
+          value:
+            httpGet:
+              path: /health
+              port: 5042
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
+            failureThreshold: 30
+            successThreshold: 1
+            periodSeconds: 10
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -163,6 +175,45 @@ tests:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+
+  - it: should allow overriding startupProbe values
+    set:
+      namespace: test-ns
+      startupProbe:
+        httpGet:
+          path: /custom-health
+          port: 6042
+          scheme: HTTPS
+        initialDelaySeconds: 5
+        timeoutSeconds: 15
+        failureThreshold: 60
+        successThreshold: 1
+        periodSeconds: 5
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe
+          value:
+            httpGet:
+              path: /custom-health
+              port: 6042
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            timeoutSeconds: 15
+            failureThreshold: 60
+            successThreshold: 1
+            periodSeconds: 5
+
+  - it: should not render startupProbe when disabled
+    set:
+      namespace: test-ns
+      startupProbe: null
+    asserts:
+      - isKind:
+          of: Deployment
+      - notExists:
+          path: spec.template.spec.containers[0].startupProbe
 
   - it: should render both regular envs and fieldRef envs together
     set:
