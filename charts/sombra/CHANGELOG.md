@@ -92,3 +92,10 @@
 
 * Added support for Kubernetes Downward API `fieldRef` environment variables via `envs_field_ref`.
   * Supported in both the main Sombra chart and the sombra-job-scheduler subchart.
+
+## 0.11.0
+
+* Added support for a Kubernetes `startupProbe` on the Sombra container.
+  * Defaults to the same `/health` endpoint on port `5042` used by the existing liveness and readiness probes, with a longer `failureThreshold` to accommodate slow start-ups.
+  * Configurable via the `startupProbe` field in `values.yaml`. Set `startupProbe: null` to disable it entirely.
+  * **Non-breaking change**: existing deployments will pick up the default startup probe; behaviour can be reverted by overriding or disabling the value.
