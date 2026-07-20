@@ -50,7 +50,6 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $opa := .Values.opa -}}
       {{- if or .Values.volumes (and $opa.enabled $opa.config) }}
       volumes:
         {{- with .Values.volumes }}
@@ -138,11 +137,19 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if or $opa.args $opa.config }}
           args:
+            {{- if $opa.args }}
             {{- toYaml $opa.args | nindent 12 }}
+            {{- else }}
+            - run
+            - --server
+            - --addr=127.0.0.1:{{ $opa.port }}
+            {{- end }}
             {{- if $opa.config }}
             - --config-file={{ $opa.configMountPath }}/{{ $opa.configFileName }}
             {{- end }}
+          {{- end }}
           ports:
             - name: opa
               containerPort: {{ $opa.port }}

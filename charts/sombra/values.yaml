@@ -270,17 +270,17 @@ opa:
   enabled: false
 
   image:
+    # Transcend EKS deploys should override repository/tag to the internal
+    # seneca-opa image (LINK-7473); this default is for generic chart use.
     repository: openpolicyagent/opa
     tag: "0.70.0-static"
     pullPolicy: IfNotPresent
 
-  # Arguments passed to the OPA entrypoint. The `--config-file` flag is
-  # appended automatically when `config` is non-empty, so the default value
-  # only needs to start the server bound to the loopback interface.
-  args:
-    - run
-    - --server
-    - --addr=127.0.0.1:8181
+  # Replaces image CMD when non-null. Omit (null) to use the image entrypoint —
+  # required for images with baked-in config (e.g. seneca-opa). When `config`
+  # is non-empty and `args` is null, the chart generates loopback-safe defaults
+  # and appends `--config-file`. When both are empty, no `args` key is rendered.
+  args: null
 
   # Environment variables for the OPA container.
   env: []
@@ -289,6 +289,9 @@ opa:
   envFrom: []
 
   # Container port OPA listens on. Kept pod-local; not exposed by a Service.
+  # Probes target the named port `opa`. When `args` is null and `config` is set,
+  # the chart generates `--addr=127.0.0.1:<port>`. Override `args` manually to
+  # keep `--addr` in sync when changing this value.
   port: 8181
 
   # Resource requests and limits for the OPA container. Defaults are
@@ -304,11 +307,11 @@ opa:
   # Container-level security context.
   securityContext: {}
 
-  # Health probes against OPA's `/health` endpoint on the loopback port.
+  # Health probes against OPA's `/health` endpoint on the named port `opa`.
   livenessProbe:
     httpGet:
       path: /health
-      port: 8181
+      port: opa
       scheme: HTTP
     initialDelaySeconds: 10
     timeoutSeconds: 5
@@ -318,7 +321,7 @@ opa:
   readinessProbe:
     httpGet:
       path: /health
-      port: 8181
+      port: opa
       scheme: HTTP
     initialDelaySeconds: 5
     timeoutSeconds: 5
@@ -330,7 +333,7 @@ opa:
   startupProbe:
     httpGet:
       path: /health
-      port: 8181
+      port: opa
       scheme: HTTP
     initialDelaySeconds: 5
     timeoutSeconds: 5
@@ -338,26 +341,19 @@ opa:
     successThreshold: 1
     periodSeconds: 10
 
-  # Graceful shutdown: `preStop` sleep lets Sombra drain in-flight requests
-  # before OPA receives SIGTERM.
-  lifecycle:
-    preStop:
-      exec:
-        command:
-          - /bin/sh
-          - -c
-          - sleep 5
+  # Optional lifecycle hooks. Default empty: static/distroless OPA images
+  # have no shell, so a `/bin/sh` preStop would fail on every shutdown.
+  lifecycle: {}
 
   # OPA configuration. When non-empty, a ConfigMap named
   # `<fullname>-opa-config` is rendered and mounted read-only at
   # `configMountPath` (as `configFileName`), and `--config-file` is appended
-  # to `args`. When empty, OPA uses the image's bundled base config and no
-  # ConfigMap is created.
+  # to `args`. When empty, no ConfigMap is created — ensure `args` still
+  # point at any image-bundled config (container `args` replace image `CMD`).
   config: {}
   configMountPath: /opa/config
   configFileName: opa-config.yaml
 
-  # Supplemental volumes / volumeMounts for the OPA container, in addition
-  # to the optional config mount above.
-  volumes: []
+  # Supplemental volumeMounts for the OPA container (in addition to the
+  # optional config mount). Mount targets must exist under pod `volumes`.
   volumeMounts: []

@@ -310,10 +310,10 @@ tests:
           value: /health
       - equal:
           path: spec.template.spec.containers[1].readinessProbe.httpGet.port
-          value: 8181
+          value: opa
       - equal:
           path: spec.template.spec.containers[1].startupProbe.httpGet.port
-          value: 8181
+          value: opa
       - equal:
           path: spec.template.spec.containers[1].resources
           value:
@@ -323,12 +323,8 @@ tests:
             requests:
               cpu: 50m
               memory: 64Mi
-      - equal:
-          path: spec.template.spec.containers[1].lifecycle.preStop.exec.command
-          value:
-            - /bin/sh
-            - -c
-            - sleep 5
+      - notExists:
+          path: spec.template.spec.containers[1].lifecycle
       - contains:
           path: spec.template.spec.containers[1].volumeMounts
           content:
@@ -345,7 +341,7 @@ tests:
       - exists:
           path: spec.template.metadata.annotations["checksum/opa-config"]
 
-  - it: should render OPA without config-file or config volume when config is empty
+  - it: should render OPA without args when config and args are empty
     set:
       namespace: test-ns
       opa:
@@ -356,9 +352,8 @@ tests:
       - lengthEqual:
           path: spec.template.spec.containers
           count: 2
-      - notContains:
+      - notExists:
           path: spec.template.spec.containers[1].args
-          content: --config-file=/opa/config/opa-config.yaml
       - notExists:
           path: spec.template.spec.containers[1].volumeMounts
       - notExists:
@@ -400,3 +395,26 @@ tests:
           content:
             configMapRef:
               name: opa-extra
+
+  - it: should generate loopback args from opa.port when config is set and args are null
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        port: 9191
+        config:
+          decision_logs:
+            console: true
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[1].args
+          value:
+            - run
+            - --server
+            - --addr=127.0.0.1:9191
+            - --config-file=/opa/config/opa-config.yaml
+      - equal:
+          path: spec.template.spec.containers[1].ports[0].containerPort
+          value: 9191
