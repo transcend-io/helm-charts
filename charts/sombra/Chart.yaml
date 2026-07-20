@@ -2,7 +2,7 @@ apiVersion: v2
 name: sombra
 description: A Helm chart to deploy Sombra and its dependent services in a Kubernetes cluster
 type: application
-version: 0.11.0
+version: 0.12.0
 maintainers:
   - name: Transcend
     email: dev@transcend.io

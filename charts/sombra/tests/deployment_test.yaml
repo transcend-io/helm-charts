@@ -239,3 +239,164 @@ tests:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+
+  - it: should not render the OPA sidecar by default
+    set:
+      namespace: test-ns
+    asserts:
+      - isKind:
+          of: Deployment
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: sombra
+      - notExists:
+          path: spec.template.spec.volumes
+      - notExists:
+          path: spec.template.metadata.annotations
+
+  - it: should render the OPA sidecar when enabled with config
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        config:
+          services:
+            bundle_service:
+              url: http://127.0.0.1:5042
+          bundles:
+            seneca:
+              service: bundle_service
+              resource: /seneca/bundles/active
+          decision_logs:
+            console: true
+    asserts:
+      - isKind:
+          of: Deployment
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 2
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: opa
+      - equal:
+          path: spec.template.spec.containers[1].image
+          value: openpolicyagent/opa:0.70.0-static
+      - equal:
+          path: spec.template.spec.containers[1].imagePullPolicy
+          value: IfNotPresent
+      - contains:
+          path: spec.template.spec.containers[1].args
+          content: run
+      - contains:
+          path: spec.template.spec.containers[1].args
+          content: --server
+      - contains:
+          path: spec.template.spec.containers[1].args
+          content: --addr=127.0.0.1:8181
+      - contains:
+          path: spec.template.spec.containers[1].args
+          content: --config-file=/opa/config/opa-config.yaml
+      - equal:
+          path: spec.template.spec.containers[1].ports[0]
+          value:
+            name: opa
+            containerPort: 8181
+            protocol: TCP
+      - equal:
+          path: spec.template.spec.containers[1].livenessProbe.httpGet.path
+          value: /health
+      - equal:
+          path: spec.template.spec.containers[1].readinessProbe.httpGet.port
+          value: 8181
+      - equal:
+          path: spec.template.spec.containers[1].startupProbe.httpGet.port
+          value: 8181
+      - equal:
+          path: spec.template.spec.containers[1].resources
+          value:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+      - equal:
+          path: spec.template.spec.containers[1].lifecycle.preStop.exec.command
+          value:
+            - /bin/sh
+            - -c
+            - sleep 5
+      - contains:
+          path: spec.template.spec.containers[1].volumeMounts
+          content:
+            name: opa-config
+            mountPath: /opa/config
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: opa-config
+            configMap:
+              name: testing-sombra-opa-config
+              defaultMode: 0444
+      - exists:
+          path: spec.template.metadata.annotations["checksum/opa-config"]
+
+  - it: should render OPA without config-file or config volume when config is empty
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+    asserts:
+      - isKind:
+          of: Deployment
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 2
+      - notContains:
+          path: spec.template.spec.containers[1].args
+          content: --config-file=/opa/config/opa-config.yaml
+      - notExists:
+          path: spec.template.spec.containers[1].volumeMounts
+      - notExists:
+          path: spec.template.spec.volumes
+      - notExists:
+          path: spec.template.metadata.annotations
+
+  - it: should render OPA env and args overrides
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        args:
+          - run
+          - --server
+          - --addr=127.0.0.1:9191
+        env:
+          - name: SENECA_BUNDLE_PROXY_URL
+            value: http://127.0.0.1:5042
+        envFrom:
+          - configMapRef:
+              name: opa-extra
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[1].args
+          value:
+            - run
+            - --server
+            - --addr=127.0.0.1:9191
+      - contains:
+          path: spec.template.spec.containers[1].env
+          content:
+            name: SENECA_BUNDLE_PROXY_URL
+            value: http://127.0.0.1:5042
+      - contains:
+          path: spec.template.spec.containers[1].envFrom
+          content:
+            configMapRef:
+              name: opa-extra

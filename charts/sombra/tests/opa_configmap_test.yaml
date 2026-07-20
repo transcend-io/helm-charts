@@ -1,0 +1,91 @@
+# Docs: https://github.com/helm-unittest/helm-unittest/blob/main/DOCUMENT.md
+suite: OPA ConfigMap
+templates:
+  - opa-configmap.yaml
+release:
+  name: testing
+tests:
+  - it: should not render a ConfigMap when OPA is disabled
+    set:
+      namespace: test-ns
+      opa:
+        enabled: false
+        config:
+          services:
+            bundle_service:
+              url: http://127.0.0.1:5042
+    asserts:
+      - notExists:
+          path: kind
+
+  - it: should not render a ConfigMap when enabled but config is empty
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        config: {}
+    asserts:
+      - notExists:
+          path: kind
+
+  - it: should render the ConfigMap when enabled with config
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        config:
+          services:
+            bundle_service:
+              url: http://127.0.0.1:5042
+          bundles:
+            seneca:
+              service: bundle_service
+              resource: /seneca/bundles/active
+              polling:
+                min_delay_seconds: 10
+                max_delay_seconds: 30
+          decision_logs:
+            console: true
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: testing-sombra-opa-config
+      - equal:
+          path: metadata.namespace
+          value: test-ns
+      - isSubset:
+          path: metadata.labels
+          content:
+            app.kubernetes.io/name: sombra
+            app.kubernetes.io/instance: testing
+      - exists:
+          path: data["opa-config.yaml"]
+      - matchRegex:
+          path: data["opa-config.yaml"]
+          pattern: "services:"
+      - matchRegex:
+          path: data["opa-config.yaml"]
+          pattern: "bundle_service:"
+      - matchRegex:
+          path: data["opa-config.yaml"]
+          pattern: "/seneca/bundles/active"
+      - matchRegex:
+          path: data["opa-config.yaml"]
+          pattern: "decision_logs:"
+
+  - it: should honor a custom config file name
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        configFileName: custom-opa.yaml
+        config:
+          decision_logs:
+            console: true
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - exists:
+          path: data["custom-opa.yaml"]

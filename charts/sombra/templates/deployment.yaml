@@ -16,9 +16,15 @@ spec:
       {{- include "sombra-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- $opa := .Values.opa -}}
+      {{- if or .Values.podAnnotations (and $opa.enabled $opa.config) }}
       annotations:
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if and $opa.enabled $opa.config }}
+        checksum/opa-config: {{ toYaml $opa.config | sha256sum }}
+        {{- end }}
       {{- end }}
       labels:
         {{- include "sombra-chart.labels" . | nindent 8 }}
@@ -44,9 +50,18 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.volumes }}
+      {{- $opa := .Values.opa -}}
+      {{- if or .Values.volumes (and $opa.enabled $opa.config) }}
       volumes:
+        {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if and $opa.enabled $opa.config }}
+        - name: opa-config
+          configMap:
+            name: {{ include "sombra-chart.fullname" . }}-opa-config
+            defaultMode: 0444
+        {{- end }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -107,6 +122,57 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             {{- toYaml .Values.volumeMounts | nindent 12 }}
+        {{- if $opa.enabled }}
+        - name: opa
+          image: "{{ $opa.image.repository }}:{{ $opa.image.tag }}"
+          imagePullPolicy: {{ $opa.image.pullPolicy }}
+          {{- with $opa.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $opa.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $opa.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          args:
+            {{- toYaml $opa.args | nindent 12 }}
+            {{- if $opa.config }}
+            - --config-file={{ $opa.configMountPath }}/{{ $opa.configFileName }}
+            {{- end }}
+          ports:
+            - name: opa
+              containerPort: {{ $opa.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml $opa.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml $opa.readinessProbe | nindent 12 }}
+          {{- with $opa.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml $opa.resources | nindent 12 }}
+          {{- with $opa.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or $opa.config $opa.volumeMounts }}
+          volumeMounts:
+            {{- if $opa.config }}
+            - name: opa-config
+              mountPath: {{ $opa.configMountPath }}
+              readOnly: true
+            {{- end }}
+            {{- with $opa.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

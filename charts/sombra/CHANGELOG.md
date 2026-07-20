@@ -93,6 +93,15 @@
 * Added support for Kubernetes Downward API `fieldRef` environment variables via `envs_field_ref`.
   * Supported in both the main Sombra chart and the sombra-job-scheduler subchart.
 
+## 0.12.0
+
+* Added opt-in OPA (Open Policy Agent) sidecar support to the Sombra Deployment.
+  * Gated by `opa.enabled` (default `false`); existing single-container deployments are unchanged.
+  * Configurable `opa.image`, `opa.args`, `opa.env`/`opa.envFrom`, `opa.resources`, `opa.securityContext`, `opa.livenessProbe`/`opa.readinessProbe`/`opa.startupProbe`, `opa.lifecycle` (drain `preStop`), `opa.port`, and supplemental `opa.volumes`/`opa.volumeMounts`.
+  * When `opa.config` is non-empty, a `<fullname>-opa-config` ConfigMap is rendered and mounted read-only at `opa.configMountPath` (as `opa.configFileName`), and `--config-file` is appended to `opa.args`. A `checksum/opa-config` pod annotation rolls pods on config changes. When `opa.config` is empty, no ConfigMap is created and OPA uses the image's bundled base config.
+  * OPA listens on `127.0.0.1:8181` by default and is never exposed through the Sombra Service.
+  * **Non-breaking change**: OPA is completely opt-in and disabled by default.
+
 ## 0.11.0
 
 * Added support for a Kubernetes `startupProbe` on the Sombra container.
