@@ -1,0 +1,13 @@
+{{- $opa := .Values.opa -}}
+{{- if and $opa.enabled $opa.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sombra-chart.fullname" . }}-opa-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "sombra-chart.labels" . | nindent 4 }}
+data:
+  {{ $opa.configFileName }}: |
+    {{- toYaml $opa.config | nindent 4 }}
+{{- end }}

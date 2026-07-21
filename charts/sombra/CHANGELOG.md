@@ -99,3 +99,12 @@
   * Defaults to the same `/health` endpoint on port `5042` used by the existing liveness and readiness probes, with a longer `failureThreshold` to accommodate slow start-ups.
   * Configurable via the `startupProbe` field in `values.yaml`. Set `startupProbe: null` to disable it entirely.
   * **Non-breaking change**: existing deployments will pick up the default startup probe; behaviour can be reverted by overriding or disabling the value.
+
+## 0.12.0
+
+* Added opt-in OPA (Open Policy Agent) sidecar support to the Sombra Deployment.
+  * Gated by `opa.enabled` (default `false`); existing single-container deployments are unchanged.
+  * Configurable `opa.image`, `opa.args`, `opa.env`/`opa.envFrom`, `opa.resources`, `opa.securityContext`, `opa.livenessProbe`/`opa.readinessProbe`/`opa.startupProbe`, `opa.lifecycle`, `opa.port`, and supplemental `opa.volumeMounts`.
+  * When `opa.config` is non-empty, a `<fullname>-opa-config` ConfigMap is rendered and mounted read-only at `opa.configMountPath` (as `opa.configFileName`), and `--config-file` is appended to generated or custom `opa.args`. A `checksum/opa-config` pod annotation rolls pods on config changes. When `opa.config` is empty and `opa.args` is null, no `args` key is rendered so the image `CMD` is preserved (e.g. seneca-opa baked config).
+  * OPA listens on `:8181` (all interfaces) by default so kubelet probes can reach `/health` via the pod IP, and is never exposed through the Sombra Service. Override `opa.args` and disable probes for strict loopback-only isolation.
+  * **Non-breaking change**: OPA is completely opt-in and disabled by default.

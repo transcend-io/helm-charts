@@ -259,3 +259,105 @@ pathfinder:
 # Asynchronous Sombra Job Scheduler
 job-scheduler:
   enabled: false
+
+# Opt-in OPA (Open Policy Agent) sidecar.
+# When enabled, an `opa` container runs alongside Sombra in the same pod. It is
+# never exposed through the Sombra Service; Sombra reaches it over the pod
+# network at `http://127.0.0.1:<port>` (or the pod IP). The generated default
+# `--addr` binds all interfaces so kubelet probes (which dial the pod IP) can
+# reach `/health`; override `opa.args` and disable probes if you require
+# strict loopback-only isolation.
+opa:
+  # Set to true to render the OPA sidecar container and (when `config` is
+  # non-empty) its ConfigMap.
+  enabled: false
+
+  image:
+    # Transcend EKS deploys should override repository/tag to the internal
+    # seneca-opa image; this default is for generic chart use.
+    repository: openpolicyagent/opa
+    tag: "0.70.0-static"
+    pullPolicy: IfNotPresent
+
+  # Replaces image CMD when non-null. Omit (null) to use the image entrypoint —
+  # required for images with baked-in config (e.g. seneca-opa). When `config`
+  # is non-empty and `args` is null, the chart generates server defaults bound
+  # to all interfaces (so kubelet probes via the pod IP succeed) and appends
+  # `--config-file`. When both are empty, no `args` key is rendered.
+  args: null
+
+  # Environment variables for the OPA container.
+  env: []
+  # Load environment variables from ConfigMaps/Secrets, same shape as
+  # `envFrom` on the Sombra container.
+  envFrom: []
+
+  # Container port OPA listens on. Kept pod-local; not exposed by a Service.
+  # Probes target the named port `opa`. When `args` is null and `config` is set,
+  # the chart generates `--addr=127.0.0.1:<port>`. Override `args` manually to
+  # keep `--addr` in sync when changing this value.
+  port: 8181
+
+  # Resource requests and limits for the OPA container. Defaults are
+  # intentionally conservative; tune from load-test data.
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+
+  # Container-level security context.
+  securityContext: {}
+
+  # Health probes against OPA's `/health` endpoint on the named port `opa`.
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: opa
+      scheme: HTTP
+    initialDelaySeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+    periodSeconds: 10
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: opa
+      scheme: HTTP
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+    periodSeconds: 10
+  # Startup probe gives OPA additional time to come up before liveness and
+  # readiness probes begin running. Set `startupProbe: null` to disable.
+  startupProbe:
+    httpGet:
+      path: /health
+      port: opa
+      scheme: HTTP
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 30
+    successThreshold: 1
+    periodSeconds: 10
+
+  # Optional lifecycle hooks. Default empty: static/distroless OPA images
+  # have no shell, so a `/bin/sh` preStop would fail on every shutdown.
+  lifecycle: {}
+
+  # OPA configuration. When non-empty, a ConfigMap named
+  # `<fullname>-opa-config` is rendered and mounted read-only at
+  # `configMountPath` (as `configFileName`), and `--config-file` is appended
+  # to `args`. When empty, no ConfigMap is created — ensure `args` still
+  # point at any image-bundled config (container `args` replace image `CMD`).
+  config: {}
+  configMountPath: /opa/config
+  configFileName: opa-config.yaml
+
+  # Supplemental volumeMounts for the OPA container (in addition to the
+  # optional config mount). Mount targets must exist under pod `volumes`.
+  volumeMounts: []

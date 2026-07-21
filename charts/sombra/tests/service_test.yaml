@@ -1,0 +1,35 @@
+# Docs: https://github.com/helm-unittest/helm-unittest/blob/main/DOCUMENT.md
+suite: Service
+templates:
+  - service.yaml
+release:
+  name: testing
+tests:
+  - it: should not expose the OPA port on either Service
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        port: 8181
+        config:
+          decision_logs:
+            console: true
+    asserts:
+      - equal:
+          path: kind
+          value: Service
+      - lengthEqual:
+          path: spec.ports
+          count: 1
+      - notContains:
+          path: spec.ports
+          content:
+            port: 8181
+      - notContains:
+          path: spec.ports
+          content:
+            targetPort: opa
+      - notContains:
+          path: spec.ports
+          content:
+            name: opa
