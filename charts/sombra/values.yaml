@@ -271,7 +271,7 @@ opa:
 
   image:
     # Transcend EKS deploys should override repository/tag to the internal
-    # seneca-opa image (LINK-7473); this default is for generic chart use.
+    # seneca-opa image; this default is for generic chart use.
     repository: openpolicyagent/opa
     tag: "0.70.0-static"
     pullPolicy: IfNotPresent
