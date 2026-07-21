@@ -261,9 +261,12 @@ job-scheduler:
   enabled: false
 
 # Opt-in OPA (Open Policy Agent) sidecar.
-# When enabled, an `opa` container runs alongside Sombra in the same pod and
-# is reachable only over localhost (default port 8181). It is never exposed
-# through the Sombra Service; Sombra reaches it via `http://127.0.0.1:<port>`.
+# When enabled, an `opa` container runs alongside Sombra in the same pod. It is
+# never exposed through the Sombra Service; Sombra reaches it over the pod
+# network at `http://127.0.0.1:<port>` (or the pod IP). The generated default
+# `--addr` binds all interfaces so kubelet probes (which dial the pod IP) can
+# reach `/health`; override `opa.args` and disable probes if you require
+# strict loopback-only isolation.
 opa:
   # Set to true to render the OPA sidecar container and (when `config` is
   # non-empty) its ConfigMap.
@@ -278,8 +281,9 @@ opa:
 
   # Replaces image CMD when non-null. Omit (null) to use the image entrypoint —
   # required for images with baked-in config (e.g. seneca-opa). When `config`
-  # is non-empty and `args` is null, the chart generates loopback-safe defaults
-  # and appends `--config-file`. When both are empty, no `args` key is rendered.
+  # is non-empty and `args` is null, the chart generates server defaults bound
+  # to all interfaces (so kubelet probes via the pod IP succeed) and appends
+  # `--config-file`. When both are empty, no `args` key is rendered.
   args: null
 
   # Environment variables for the OPA container.

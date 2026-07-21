@@ -295,7 +295,7 @@ tests:
           content: --server
       - contains:
           path: spec.template.spec.containers[1].args
-          content: --addr=127.0.0.1:8181
+          content: --addr=:8181
       - contains:
           path: spec.template.spec.containers[1].args
           content: --config-file=/opa/config/opa-config.yaml
@@ -396,7 +396,7 @@ tests:
             configMapRef:
               name: opa-extra
 
-  - it: should generate loopback args from opa.port when config is set and args are null
+  - it: should generate server args from opa.port when config is set and args are null
     set:
       namespace: test-ns
       opa:
@@ -413,7 +413,7 @@ tests:
           value:
             - run
             - --server
-            - --addr=127.0.0.1:9191
+            - --addr=:9191
             - --config-file=/opa/config/opa-config.yaml
       - equal:
           path: spec.template.spec.containers[1].ports[0].containerPort

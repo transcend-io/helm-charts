@@ -144,7 +144,7 @@ spec:
             {{- else }}
             - run
             - --server
-            - --addr=127.0.0.1:{{ $opa.port }}
+            - --addr=:{{ $opa.port }}
             {{- end }}
             {{- if $opa.config }}
             - --config-file={{ $opa.configMountPath }}/{{ $opa.configFileName }}
