@@ -108,3 +108,9 @@
   * When `opa.config` is non-empty, a `<fullname>-opa-config` ConfigMap is rendered and mounted read-only at `opa.configMountPath` (as `opa.configFileName`), and `--config-file` is appended to generated or custom `opa.args`. A `checksum/opa-config` pod annotation rolls pods on config changes. When `opa.config` is empty and `opa.args` is null, no `args` key is rendered so the image `CMD` is preserved (e.g. seneca-opa baked config).
   * OPA listens on `:8181` (all interfaces) by default so kubelet probes can reach `/health` via the pod IP, and is never exposed through the Sombra Service. Override `opa.args` and disable probes for strict loopback-only isolation.
   * **Non-breaking change**: OPA is completely opt-in and disabled by default.
+
+## 0.13.0
+
+* Made OPA `livenessProbe` and `readinessProbe` omitable via `null`, matching the existing `startupProbe` pattern. Setting `opa.readinessProbe: null` no longer renders invalid `readinessProbe: null` YAML.
+  * **ECS vs EKS failure-mode parity**: On ECS MTS, OPA runs with `essential=false`, so an OPA crash leaves Sombra in service and Seneca fails closed in-app. On EKS, any container readiness probe gates pod Ready; omit OPA readiness (`opa.readinessProbe: null`) so OPA outages do not drain Sombra from Service/ALB endpoints. Keep OPA liveness (default) to restart a wedged sidecar.
+  * **Non-breaking change**: default OPA probes are unchanged; existing installs keep current behavior unless consumers explicitly set probes to `null`.

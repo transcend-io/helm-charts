@@ -418,3 +418,33 @@ tests:
       - equal:
           path: spec.template.spec.containers[1].ports[0].containerPort
           value: 9191
+
+  - it: should not render OPA readinessProbe when disabled
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        readinessProbe: null
+    asserts:
+      - isKind:
+          of: Deployment
+      - notExists:
+          path: spec.template.spec.containers[1].readinessProbe
+      - exists:
+          path: spec.template.spec.containers[0].readinessProbe
+      - exists:
+          path: spec.template.spec.containers[1].livenessProbe
+
+  - it: should not render OPA livenessProbe when disabled
+    set:
+      namespace: test-ns
+      opa:
+        enabled: true
+        livenessProbe: null
+    asserts:
+      - isKind:
+          of: Deployment
+      - notExists:
+          path: spec.template.spec.containers[1].livenessProbe
+      - exists:
+          path: spec.template.spec.containers[1].readinessProbe

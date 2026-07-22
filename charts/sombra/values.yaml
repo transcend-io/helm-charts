@@ -312,6 +312,7 @@ opa:
   securityContext: {}
 
   # Health probes against OPA's `/health` endpoint on the named port `opa`.
+  # Set any probe to `null` to omit it (same pattern as `startupProbe`).
   livenessProbe:
     httpGet:
       path: /health
