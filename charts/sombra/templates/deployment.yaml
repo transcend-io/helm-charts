@@ -154,10 +154,14 @@ spec:
             - name: opa
               containerPort: {{ $opa.port }}
               protocol: TCP
+          {{- with $opa.livenessProbe }}
           livenessProbe:
-            {{- toYaml $opa.livenessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $opa.readinessProbe }}
           readinessProbe:
-            {{- toYaml $opa.readinessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with $opa.startupProbe }}
           startupProbe:
             {{- toYaml . | nindent 12 }}
