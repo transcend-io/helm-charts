@@ -312,7 +312,7 @@ opa:
   securityContext: {}
 
   # Health probes against OPA's `/health` endpoint on the named port `opa`.
-  # Set any probe to `null` to omit it (same pattern as `startupProbe`).
+  # Set any probe to `null` to omit it.
   livenessProbe:
     httpGet:
       path: /health
@@ -334,7 +334,7 @@ opa:
     successThreshold: 1
     periodSeconds: 10
   # Startup probe gives OPA additional time to come up before liveness and
-  # readiness probes begin running. Set `startupProbe: null` to disable.
+  # readiness probes begin running. Any probe can be omitted via `null`.
   startupProbe:
     httpGet:
       path: /health
