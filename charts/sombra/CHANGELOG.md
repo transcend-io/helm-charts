@@ -114,3 +114,9 @@
 * Made OPA `livenessProbe` and `readinessProbe` omitable via `null`, matching the existing `startupProbe` pattern. Setting `opa.readinessProbe: null` no longer renders invalid `readinessProbe: null` YAML.
   * **ECS vs EKS failure-mode parity**: On ECS MTS, OPA runs with `essential=false`, so an OPA crash leaves Sombra in service and Seneca fails closed in-app. On EKS, any container readiness probe gates pod Ready; omit OPA readiness (`opa.readinessProbe: null`) so OPA outages do not drain Sombra from Service/ALB endpoints. Keep OPA liveness (default) to restart a wedged sidecar.
   * **Non-breaking change**: default OPA probes are unchanged; existing installs keep current behavior unless consumers explicitly set probes to `null`.
+
+## 0.14.0
+
+* Raised default `opa.resources` so the OPA sidecar matches the ECS `opa-mts` Fargate reservation and can burst.
+  * Requests `50m/64Mi` → `250m/512Mi` (matches ECS `opa-mts` `cpu=256`/`memory=512`); limits `100m/128Mi` → `500m/1Gi` (2x headroom). The previous defaults made `requests` exceed `limits` once consumers bumped requests to `250m/512Mi`, which Kubernetes rejects.
+  * **Behavior change for opt-in OPA consumers**: deployments with `opa.enabled: true` and no `opa.resources` override now reserve more CPU/memory. Self-hosted consumers that pinned the old defaults should set `opa.resources` explicitly.

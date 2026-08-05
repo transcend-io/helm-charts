@@ -298,15 +298,16 @@ opa:
   # keep `--addr` in sync when changing this value.
   port: 8181
 
-  # Resource requests and limits for the OPA container. Defaults are
-  # intentionally conservative; tune from load-test data.
+  # Resource requests and limits for the OPA container. Requests match the
+  # ECS opa-mts Fargate reservation (cpu=256 / memory=512); limits give the
+  # sidecar 2x headroom to burst. Tune from load-test data.
   resources:
     requests:
-      cpu: "50m"
-      memory: "64Mi"
+      cpu: "250m"
+      memory: "512Mi"
     limits:
-      cpu: "100m"
-      memory: "128Mi"
+      cpu: "500m"
+      memory: "1Gi"
 
   # Container-level security context.
   securityContext: {}
