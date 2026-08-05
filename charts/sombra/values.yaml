@@ -31,12 +31,12 @@ image:
   # Define the pullPolicy for Sombra image
   pullPolicy: IfNotPresent
   # Sombra version to deploy
-  tag: 'latest'
+  tag: "latest"
 
 # Override name of app
-nameOverride: ''
+nameOverride: ""
 # Override the full qualified app name
-fullnameOverride: ''
+fullnameOverride: ""
 
 # Service account configuration (optional)
 # Uncomment and configure this section if you want to use a custom service account
@@ -135,17 +135,17 @@ transcend_ingress:
 # These environment variables are saved as secret
 envs_as_secret:
   - name: JWT_ECDSA_KEY
-    value: '<JWT_ECDSA_KEY>'
+    value: "<JWT_ECDSA_KEY>"
 
 envs:
   - name: ORGANIZATION_URI
-    value: 'some-org'
+    value: "some-org"
   - name: SOMBRA_ID
-    value: 'some-id'
+    value: "some-id"
   - name: EMPLOYEE_AUTHENTICATION_METHODS
-    value: 'transcend,session'
+    value: "transcend,session"
   - name: DATA_SUBJECT_AUTHENTICATION_METHODS
-    value: 'transcend,session'
+    value: "transcend,session"
 
 # Environment variables populated via the Downward API (fieldRef).
 # Exposes pod and node metadata as environment variables.
@@ -167,16 +167,16 @@ isMultiTenant: false
 
 # Configuration for log forwarding to Transcend
 datadog:
-  serviceName: 'customer_hosted_sombra'
+  serviceName: "customer_hosted_sombra"
 
 # Resource requests and limits for the Sombra pod
 resources:
   requests:
-    cpu: '2'
-    memory: '8Gi'
+    cpu: "2"
+    memory: "8Gi"
   limits:
-    cpu: '3'
-    memory: '12Gi'
+    cpu: "3"
+    memory: "12Gi"
 
 # Health check configuration
 livenessProbe:
@@ -276,7 +276,7 @@ opa:
     # Transcend EKS deploys should override repository/tag to the internal
     # seneca-opa image; this default is for generic chart use.
     repository: openpolicyagent/opa
-    tag: '0.70.0-static'
+    tag: "0.70.0-static"
     pullPolicy: IfNotPresent
 
   # Replaces image CMD when non-null. Omit (null) to use the image entrypoint —
@@ -303,11 +303,11 @@ opa:
   # sidecar 2x headroom to burst. Tune from load-test data.
   resources:
     requests:
-      cpu: '250m'
-      memory: '512Mi'
+      cpu: "250m"
+      memory: "512Mi"
     limits:
-      cpu: '500m'
-      memory: '1Gi'
+      cpu: "500m"
+      memory: "1Gi"
 
   # Container-level security context.
   securityContext: {}

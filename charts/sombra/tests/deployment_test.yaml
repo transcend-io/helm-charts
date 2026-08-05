@@ -94,37 +94,37 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: DD_SERVICE_NAME
-            value: 'testing-sombra-service'
+            value: "testing-sombra-service"
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: ORGANIZATION_URI
-            value: 'some-org'
+            value: "some-org"
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: IS_MULTI
-            value: 'false'
+            value: "false"
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: SOMBRA_ID
-            value: 'some-id'
+            value: "some-id"
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: DATA_SUBJECT_AUTHENTICATION_METHODS
-            value: 'transcend,session'
+            value: "transcend,session"
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: EMPLOYEE_AUTHENTICATION_METHODS
-            value: 'transcend,session'
+            value: "transcend,session"
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: LLM_CLASSIFIER_URL
-            value: 'http://testing-llm-classifier.test-ns.svc:6081'
+            value: "http://testing-llm-classifier.test-ns.svc:6081"
 
   - it: should render fieldRef env vars from envs_field_ref
     set:
@@ -220,7 +220,7 @@ tests:
       namespace: test-ns
       envs:
         - name: ORGANIZATION_URI
-          value: 'test-org'
+          value: "test-org"
       envs_field_ref:
         - name: POD_NAME
           fieldPath: metadata.name
@@ -231,7 +231,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: ORGANIZATION_URI
-            value: 'test-org'
+            value: "test-org"
       - contains:
           path: spec.template.spec.containers[0].env
           content:

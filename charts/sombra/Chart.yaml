@@ -9,10 +9,10 @@ maintainers:
 dependencies:
   - name: llm-classifier
     condition: llm-classifier.enabled
-    version: '0.2.2'
+    version: "0.2.2"
   - name: pathfinder
     condition: pathfinder.enabled
-    version: '0.2.2'
+    version: "0.2.2"
   - name: sombra-job-scheduler
     condition: sombra-job-scheduler.enabled
-    version: '0.1.4'
+    version: "0.1.4"
