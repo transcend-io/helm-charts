@@ -184,21 +184,21 @@ livenessProbe:
     path: /health
     port: 5042
     scheme: HTTP
-  initialDelaySeconds: 10
+  initialDelaySeconds: 60
   timeoutSeconds: 30
   failureThreshold: 6
   successThreshold: 1
-  periodSeconds: 10
+  periodSeconds: 30
 readinessProbe:
   httpGet:
     path: /health
     port: 5042
     scheme: HTTP
-  initialDelaySeconds: 10
+  initialDelaySeconds: 60
   timeoutSeconds: 10
   failureThreshold: 3
   successThreshold: 1
-  periodSeconds: 10
+  periodSeconds: 30
 # Startup probe gives the container additional time to come up before the
 # liveness and readiness probes begin running. Set `startupProbe: null` to
 # disable it entirely.
@@ -207,7 +207,7 @@ startupProbe:
     path: /health
     port: 5042
     scheme: HTTP
-  initialDelaySeconds: 10
+  initialDelaySeconds: 45
   timeoutSeconds: 30
   failureThreshold: 30
   successThreshold: 1
@@ -249,11 +249,6 @@ global:
 
 # Data classification service using LLM model
 llm-classifier:
-  enabled: false
-
-# Pathfinder is AI governance layer that gives you control and auditability on data going in and out of LLMs.
-# @see https://docs.transcend.io/docs/pathfinder
-pathfinder:
   enabled: false
 
 # Asynchronous Sombra Job Scheduler

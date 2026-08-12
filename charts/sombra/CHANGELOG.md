@@ -115,6 +115,13 @@
   * **ECS vs EKS failure-mode parity**: On ECS MTS, OPA runs with `essential=false`, so an OPA crash leaves Sombra in service and Seneca fails closed in-app. On EKS, any container readiness probe gates pod Ready; omit OPA readiness (`opa.readinessProbe: null`) so OPA outages do not drain Sombra from Service/ALB endpoints. Keep OPA liveness (default) to restart a wedged sidecar.
   * **Non-breaking change**: default OPA probes are unchanged; existing installs keep current behavior unless consumers explicitly set probes to `null`.
 
+## 0.15.0
+
+* Relaxed default Sombra probe timings to give the container more time to become healthy.
+  * `livenessProbe` / `readinessProbe`: `initialDelaySeconds` `10` → `60`, `periodSeconds` `10` → `30`.
+  * `startupProbe`: `initialDelaySeconds` `10` → `45`.
+* Removed the pathfinder subchart and its dependency/values wiring from the Sombra chart.
+
 ## 0.14.0
 
 * Raised default `opa.resources` so the OPA sidecar matches the ECS `opa-mts` Fargate reservation and can burst.
