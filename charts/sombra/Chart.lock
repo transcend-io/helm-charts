@@ -2,11 +2,8 @@ dependencies:
 - name: llm-classifier
   repository: ""
   version: 0.2.2
-- name: pathfinder
-  repository: ""
-  version: 0.2.2
 - name: sombra-job-scheduler
   repository: ""
   version: 0.1.4
-digest: sha256:a0b711e5cf90fc8de02464661bc8bfef2325b8924150697519fa43207f61db5e
-generated: "2026-03-17T21:05:53.091638-07:00"
+digest: sha256:b1e28c8af5b12d04cb92f10c0fd7f48c3e2f0e7d940dbb4d6c963dba13fd360b
+generated: "2026-08-12T15:22:38.597227-07:00"

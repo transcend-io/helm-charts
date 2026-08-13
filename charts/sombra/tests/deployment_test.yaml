@@ -61,11 +61,11 @@ tests:
               path: /health
               port: 5042
               scheme: HTTP
-            initialDelaySeconds: 10
+            initialDelaySeconds: 60
             timeoutSeconds: 30
             failureThreshold: 6
             successThreshold: 1
-            periodSeconds: 10
+            periodSeconds: 30
       - equal:
           path: spec.template.spec.containers[0].readinessProbe
           value:
@@ -73,11 +73,11 @@ tests:
               path: /health
               port: 5042
               scheme: HTTP
-            initialDelaySeconds: 10
+            initialDelaySeconds: 60
             timeoutSeconds: 10
             failureThreshold: 3
             successThreshold: 1
-            periodSeconds: 10
+            periodSeconds: 30
       - equal:
           path: spec.template.spec.containers[0].startupProbe
           value:
@@ -85,7 +85,7 @@ tests:
               path: /health
               port: 5042
               scheme: HTTP
-            initialDelaySeconds: 10
+            initialDelaySeconds: 45
             timeoutSeconds: 30
             failureThreshold: 30
             successThreshold: 1
