@@ -213,6 +213,12 @@ startupProbe:
   successThreshold: 1
   periodSeconds: 10
 
+# Optional lifecycle hooks for the Sombra container. Kubernetes does not start
+# the next container in the pod (e.g. the OPA sidecar) until a `postStart`
+# hook returns, so a hook that waits for Sombra to listen delays the sidecar.
+# A failing `postStart` hook kills the container, so make it exit 0 on timeout.
+lifecycle: {}
+
 # The default is 30 seconds.
 # We choose a higher grace period to allow more requests to complete.
 terminationGracePeriodSeconds: 120

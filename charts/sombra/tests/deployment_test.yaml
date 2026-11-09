@@ -215,6 +215,34 @@ tests:
       - notExists:
           path: spec.template.spec.containers[0].startupProbe
 
+  - it: should not render lifecycle on the Sombra container by default
+    set:
+      namespace: test-ns
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].lifecycle
+
+  - it: should render a postStart hook on the Sombra container ahead of the OPA sidecar
+    set:
+      namespace: test-ns
+      opa.enabled: true
+      lifecycle:
+        postStart:
+          exec:
+            command: ["node", "-e", "wait-for-port"]
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle
+          value:
+            postStart:
+              exec:
+                command: ["node", "-e", "wait-for-port"]
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: opa
+      - notExists:
+          path: spec.template.spec.containers[1].lifecycle
+
   - it: should render both regular envs and fieldRef envs together
     set:
       namespace: test-ns

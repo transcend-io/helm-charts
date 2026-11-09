@@ -115,6 +115,12 @@
   * **ECS vs EKS failure-mode parity**: On ECS MTS, OPA runs with `essential=false`, so an OPA crash leaves Sombra in service and Seneca fails closed in-app. On EKS, any container readiness probe gates pod Ready; omit OPA readiness (`opa.readinessProbe: null`) so OPA outages do not drain Sombra from Service/ALB endpoints. Keep OPA liveness (default) to restart a wedged sidecar.
   * **Non-breaking change**: default OPA probes are unchanged; existing installs keep current behavior unless consumers explicitly set probes to `null`.
 
+## 0.16.0
+
+* Added an optional `lifecycle` value for the Sombra container (default `{}`, not rendered).
+  * Kubernetes does not start the next container until a `postStart` hook returns. A hook that waits for Sombra's port holds back the OPA sidecar, so OPA stops logging `connection refused` bundle-load errors while Sombra boots.
+  * **Non-breaking change**: nothing renders unless consumers set `lifecycle`.
+
 ## 0.15.0
 
 * Relaxed default Sombra probe timings to give the container more time to become healthy.
