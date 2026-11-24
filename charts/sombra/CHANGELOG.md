@@ -115,6 +115,12 @@
   * **ECS vs EKS failure-mode parity**: On ECS MTS, OPA runs with `essential=false`, so an OPA crash leaves Sombra in service and Seneca fails closed in-app. On EKS, any container readiness probe gates pod Ready; omit OPA readiness (`opa.readinessProbe: null`) so OPA outages do not drain Sombra from Service/ALB endpoints. Keep OPA liveness (default) to restart a wedged sidecar.
   * **Non-breaking change**: default OPA probes are unchanged; existing installs keep current behavior unless consumers explicitly set probes to `null`.
 
+## 0.17.0
+
+* Bumped the default OPA sidecar image from `openpolicyagent/opa:0.70.0-static` to `openpolicyagent/opa:1.20.2-static`.
+  * OPA 1.x parses Rego v1 syntax by default. Policies that already `import rego.v1` load unchanged; policies relying on v0-only syntax (e.g. rules without `if`/`contains`) must be updated or run with `--v0-compatible` via `opa.args`.
+  * **Behavior change for opt-in OPA consumers**: deployments with `opa.enabled: true` and no `opa.image` override now run OPA 1.x. Deployments that override `opa.image` are unaffected.
+
 ## 0.16.0
 
 * Added an optional `lifecycle` value for the Sombra container (default `{}`, not rendered).
